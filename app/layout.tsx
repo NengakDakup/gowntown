@@ -11,8 +11,8 @@ const lato = Lato({
 })
 
 export const metadata: Metadata = {
-  title: 'Next.js App',
-  description: 'Built with Next.js, Tailwind CSS, and shadcn/ui',
+  title: 'GOWNS2TOWN',
+  description: 'Connect, GROW, EXPAND',
 }
 
 export default function RootLayout({
@@ -22,7 +22,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={`${lato.className} antialiased`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
