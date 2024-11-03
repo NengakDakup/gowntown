@@ -1,10 +1,20 @@
+'use client'
+import { useEffect } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+
 
 export default function Home() {
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push('/login')
+  }, [])
+
   return (
     <main className="min-h-screen bg-background">
       <div className="container mx-auto max-w-7xl px-4">
