@@ -1,6 +1,6 @@
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
-import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar } from "lucide-react"
+import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -18,7 +18,7 @@ export default function Home() {
               priority
             />
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <Button asChild variant="ghost">
               <Link href="/login">Sign in</Link>
             </Button>
@@ -27,11 +27,16 @@ export default function Home() {
             </Button>
             <ThemeToggle />
           </div>
+          <div className="md:hidden">
+            <Button variant="ghost" size="icon">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </div>
         </nav>
 
-        <div className="grid grid-cols-12 gap-6 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 py-6">
           {/* Left Sidebar */}
-          <div className="col-span-3 space-y-4">
+          <div className="hidden md:block md:col-span-3 space-y-4">
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <div className="flex flex-col space-y-3">
                 <a href="#" className="flex items-center space-x-2 text-primary hover:underline">
@@ -58,8 +63,28 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Mobile Navigation */}
+          <div className="md:hidden flex overflow-x-auto space-x-4 pb-4">
+            <Button variant="ghost" className="flex items-center space-x-2">
+              <HomeIcon className="w-5 h-5" />
+              <span>Home</span>
+            </Button>
+            <Button variant="ghost" className="flex items-center space-x-2">
+              <Users className="w-5 h-5" />
+              <span>Network</span>
+            </Button>
+            <Button variant="ghost" className="flex items-center space-x-2">
+              <Briefcase className="w-5 h-5" />
+              <span>Jobs</span>
+            </Button>
+            <Button variant="ghost" className="flex items-center space-x-2">
+              <BookOpen className="w-5 h-5" />
+              <span>Learn</span>
+            </Button>
+          </div>
+
           {/* Main Content */}
-          <div className="col-span-6 space-y-6">
+          <div className="col-span-1 md:col-span-6 space-y-6">
             {/* Create Post */}
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <input
@@ -85,7 +110,7 @@ export default function Home() {
           </div>
 
           {/* Right Sidebar */}
-          <div className="col-span-3 space-y-6">
+          <div className="hidden md:block md:col-span-3 space-y-6">
             {/* Suggested Connections */}
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <h3 className="font-semibold mb-4">People You May Know</h3>
