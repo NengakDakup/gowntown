@@ -2,7 +2,7 @@
 import { useEffect } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
-import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu } from "lucide-react"
+import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu, MessageSquare, LetterText, Mail, Bell } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -12,13 +12,13 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    router.push('/login')
+    // router.push('/login')
   }, [])
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="container mx-auto max-w-7xl px-4">
-        <nav className="flex items-center justify-between py-4 border-b">
+    <main className="min-h-screen bg-muted">
+      <div className="w-full border-b bg-white dark:bg-background">
+        <nav className="flex mx-auto px-8 max-w-[1400px] items-center justify-between py-4">
           <Link href="/">
             <Image
               src="/assets/images/logo.png"
@@ -28,7 +28,7 @@ export default function Home() {
               priority
             />
           </Link>
-          <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <Button asChild variant="ghost">
               <Link href="/login">Sign in</Link>
             </Button>
@@ -37,37 +37,35 @@ export default function Home() {
             </Button>
             <ThemeToggle />
           </div>
-          <div className="md:hidden">
-            <Button variant="ghost" size="icon">
-              <Menu className="h-6 w-6" />
-            </Button>
-          </div>
-        </nav>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 py-6">
+        </nav>
+      </div>
+      <div className="w-full">
+
+        <div className="grid grid-cols-1 md:grid-cols-12 pb-6">
           {/* Left Sidebar */}
-          <div className="hidden md:block md:col-span-3 space-y-4">
-            <div className="rounded-lg border bg-card p-4 shadow-sm">
-              <div className="flex flex-col space-y-3">
-                <a href="#" className="flex items-center space-x-2 text-primary hover:underline">
+          <div className="hidden md:block md:col-span-2 space-y-4 sticky">
+            <div className="border-r bg-card h-screen">
+              <div className="flex flex-col py-8">
+                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-primary hover:text-primary hover:bg-muted">
                   <HomeIcon className="w-5 h-5" />
                   <span>Home</span>
                 </a>
-                <a href="#" className="flex items-center space-x-2 text-muted-foreground hover:text-primary">
+                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-muted-foreground hover:text-primary hover:bg-muted">
                   <Users className="w-5 h-5" />
                   <span>My Network</span>
                 </a>
-                <a href="#" className="flex items-center space-x-2 text-muted-foreground hover:text-primary">
+                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-muted-foreground hover:text-primary hover:bg-muted">
                   <Briefcase className="w-5 h-5" />
                   <span>Jobs</span>
                 </a>
-                <a href="#" className="flex items-center space-x-2 text-muted-foreground hover:text-primary">
-                  <BookOpen className="w-5 h-5" />
-                  <span>Learning</span>
+                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-muted-foreground hover:text-primary hover:bg-muted">
+                  <Mail className="w-5 h-5" />
+                  <span>Messages</span>
                 </a>
-                <a href="#" className="flex items-center space-x-2 text-muted-foreground hover:text-primary">
-                  <Calendar className="w-5 h-5" />
-                  <span>Events</span>
+                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-muted-foreground hover:text-primary hover:bg-muted">
+                  <Bell className="w-5 h-5" />
+                  <span>Notifications</span>
                 </a>
               </div>
             </div>
@@ -94,7 +92,7 @@ export default function Home() {
           </div>
 
           {/* Main Content */}
-          <div className="col-span-1 md:col-span-6 space-y-6">
+          <div className="col-span-1 md:col-span-7 space-y-6 p-8 mx-auto max-w-[1400px]">
             {/* Create Post */}
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <input
@@ -105,7 +103,7 @@ export default function Home() {
             </div>
 
             {/* Posts */}
-            {[1, 2, 3].map((post) => (
+            {[1, 2, 3, 4, 5, 6, 7].map((post) => (
               <div key={post} className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 rounded-full bg-muted" />
@@ -120,7 +118,7 @@ export default function Home() {
           </div>
 
           {/* Right Sidebar */}
-          <div className="hidden md:block md:col-span-3 space-y-6">
+          <div className="hidden md:block md:col-span-3 space-y-6 border-l h-screen p-4 bg-background">
             {/* Suggested Connections */}
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <h3 className="font-semibold mb-4">People You May Know</h3>
