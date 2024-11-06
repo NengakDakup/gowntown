@@ -1,23 +1,47 @@
-import { PlusIcon, ShareIcon } from 'lucide-react'
+import React from 'react'
+import { Bookmark, Copy, Ellipsis, Flag, FlagOffIcon, PlusIcon, ShareIcon } from 'lucide-react'
 import { MessageSquare } from 'lucide-react'
 import { ThumbsUp } from 'lucide-react'
-import React from 'react'
-import { Button } from './ui/button'
 import Image from 'next/image'
+import { Button } from './ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 
 const Post = ({ post }: { post: any }) => {
   return (
     <div key={post} className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
-      <div className="flex items-center space-x-3">
-        <div className="w-12 h-12 rounded-full bg-muted">
-          <Image src="/assets/images/user.png" width={48} height={48} alt='user profile image' className='w-12 h-12 rounded-full' />
+      <div className="flex flex-row justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="w-12 h-12 rounded-full bg-muted">
+            <Image src="/assets/images/user.png" width={48} height={48} alt='user profile image' className='w-12 h-12 rounded-full' />
+          </div>
+          <div>
+            <h3 className="font-semibold">Abu Joy . <span className='text-primary inline-flex underline text-xs cursor-pointer'>Follow <PlusIcon className='w-4 h-4' /></span></h3>
+            <p className='text-sm text-muted-foreground'>Chief Marketing Officer @ Binance</p>
+            <p className="text-sm text-muted-foreground">Posted 2h ago</p>
+          </div>
         </div>
-        <div>
-          <h3 className="font-semibold">Abu Joy . <span className='text-primary inline-flex underline text-xs cursor-pointer'>Follow <PlusIcon className='w-4 h-4' /></span></h3>
-          <p className='text-sm text-muted-foreground'>Chief Marketing Officer @ Binance</p>
-          <p className="text-sm text-muted-foreground">Posted 2h ago</p>
-        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger><Ellipsis /> </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem className='cursor-pointer p-2'><Bookmark className='pr-1' /> Save</DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer p-2'><Copy className='pr-1' /> Copy Link To Post</DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer p-2'><Flag className='pr-1' /> Report Post </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+
+
       </div>
+
       <p className="text-muted-foreground">This is a sample post content. It could be about anything - work updates, industry news, or professional achievements.</p>
       <div className="grid grid-cols-2 gap-4">
         <img src="https://www.socialpilot.co/wp-content/uploads/2022/02/Best-Times-to-Post-on-Social-Media-in-2022.jpg" alt="Post Image 1" className="w-full h-auto" />
