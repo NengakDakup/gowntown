@@ -2,10 +2,11 @@
 import { useEffect } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
-import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu, MessageSquare, LetterText, Mail, Bell, Pencil } from "lucide-react"
+import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu, MessageSquare, LetterText, Mail, Bell, Pencil, ShareIcon, ThumbsUp } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import LeftSidebar from "@/components/LeftSidebar"
 
 
 export default function Home() {
@@ -44,38 +45,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-12 pb-6">
           {/* Left Sidebar */}
-          <div className="hidden md:block md:col-span-2 space-y-4">
-            <div className="border-r bg-card h-screen sticky top-0">
-              <div className="flex flex-col py-8">
-                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-primary hover:text-primary hover:bg-muted">
-                  <HomeIcon className="w-5 h-5" />
-                  <span>Home</span>
-                </a>
-                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-muted-foreground hover:text-primary hover:bg-muted">
-                  <Users className="w-5 h-5" />
-                  <span>My Network</span>
-                </a>
-                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-muted-foreground hover:text-primary hover:bg-muted">
-                  <Briefcase className="w-5 h-5" />
-                  <span>Jobs</span>
-                </a>
-                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-muted-foreground hover:text-primary hover:bg-muted">
-                  <Mail className="w-5 h-5" />
-                  <span>Messages</span>
-                </a>
-                <a href="#" className="flex p-4 py-4 items-center space-x-4 text-muted-foreground hover:text-primary hover:bg-muted">
-                  <Bell className="w-5 h-5" />
-                  <span>Notifications</span>
-                </a>
-                <div className="py-4 px-2">
-                  <Button className="rounded-full w-full py-0 gap-x-1">
-                    <Pencil className="w-4 h-4" /> Create Post
-                  </Button>
-
-                </div>
-              </div>
-            </div>
-          </div>
+          <LeftSidebar />
 
           {/* Mobile Navigation */}
           <div className="md:hidden flex overflow-x-auto space-x-4 pb-4">
@@ -129,6 +99,26 @@ export default function Home() {
                     </div>
                   </div>
                   <p className="text-muted-foreground">This is a sample post content. It could be about anything - work updates, industry news, or professional achievements.</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <img src="https://www.socialpilot.co/wp-content/uploads/2022/02/Best-Times-to-Post-on-Social-Media-in-2022.jpg" alt="Post Image 1" className="w-full h-auto" />
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTURdDqelvoGcV40VcdM29WaGXWHp9FpkNy8dKTGK5Q8IZ5Q17t5EV-rJSKkKbDVrjgm4&usqp=CAU" alt="Post Image 2" className="w-full h-auto" />
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVEh5yWWzmA0YoMZezhJlPI_LKPKmJB0ge1vI4WHcj5l4HZVxFIHu5nXREu8LfkUGlji0&usqp=CAU" alt="Post Image 3" className="w-full h-auto" />
+                    <img src="https://media.istockphoto.com/id/521747273/vector/work-for-life.jpg?s=612x612&w=0&k=20&c=bLjt357WizASD-zcNYiaSqI8JeQBCda2ovuOgDmsXi8=" alt="Post Image 4" className="w-full h-auto" />
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <button className="text-primary hover:text-primary-foreground">
+                      <ThumbsUp className="w-5 h-5" />
+                      <span className="ml-2">Like</span>
+                    </button>
+                    <button className="text-primary hover:text-primary-foreground">
+                      <MessageSquare className="w-5 h-5" />
+                      <span className="ml-2">Comment</span>
+                    </button>
+                    <button className="text-primary hover:text-primary-foreground">
+                      <ShareIcon className="w-5 h-5" />
+                      <span className="ml-2">Share</span>
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
