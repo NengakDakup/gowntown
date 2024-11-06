@@ -1,5 +1,5 @@
 import React from 'react'
-import { Bookmark, Copy, Ellipsis, Flag, FlagOffIcon, PlusIcon, ShareIcon } from 'lucide-react'
+import { Bookmark, Copy, Ellipsis, Flag, FlagOffIcon, Globe, GlobeIcon, PlusIcon, ShareIcon } from 'lucide-react'
 import { MessageSquare } from 'lucide-react'
 import { ThumbsUp } from 'lucide-react'
 import Image from 'next/image'
@@ -25,7 +25,7 @@ const Post = ({ post }: { post: any }) => {
           <div>
             <h3 className="font-semibold">Abu Joy . <span className='text-primary inline-flex underline text-xs cursor-pointer'>Follow <PlusIcon className='w-4 h-4' /></span></h3>
             <p className='text-sm text-muted-foreground'>Chief Marketing Officer @ Binance</p>
-            <p className="text-sm text-muted-foreground">Posted 2h ago</p>
+            <p className="text-sm text-muted-foreground inline-flex">2h ago . <GlobeIcon className='w-5 h-5 pl-1' /> </p>
           </div>
         </div>
 
