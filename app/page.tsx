@@ -2,7 +2,7 @@
 import { useEffect } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
-import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu, MessageSquare, LetterText, Mail, Bell, Pencil, ShareIcon, ThumbsUp } from "lucide-react"
+import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu, MessageSquare, LetterText, Mail, Bell, Pencil, ShareIcon, ThumbsUp, ChevronDown } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -44,9 +44,12 @@ export default function Home() {
               <CreatePost />
 
               {/* Posts */}
-              {[1, 2, 3, 4, 5, 6, 7].map((post) => (
+              {[1, 2, 3].map((post) => (
                 <Post post={post} />
               ))}
+              <div className="w-full text-center pt-6">
+                <span className="text-primary inline-flex text-sm cursor-pointer hover:underline">Show More <ChevronDown className="" /> </span>
+              </div>
             </div>
           </div>
           <RightContent />
