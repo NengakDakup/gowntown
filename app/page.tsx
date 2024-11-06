@@ -10,6 +10,7 @@ import LeftSidebar from "@/components/LeftSidebar"
 import MobileNavigation from "@/components/MobileNavigation"
 import RightContent from "@/components/RightContent"
 import Post from "@/components/Post"
+import Header from "@/components/Header"
 
 
 export default function Home() {
@@ -21,38 +22,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-muted">
-      <div className="w-full border-b bg-white dark:bg-background">
-        <nav className="flex mx-auto px-8 max-w-[1400px] items-center justify-between py-4">
-          <Link href="/">
-            <Image
-              src="/assets/images/logo.png"
-              alt="Logo"
-              width={48}
-              height={48}
-              priority
-            />
-          </Link>
-          <div className="flex items-center gap-4">
-            <Button asChild variant="ghost">
-              <Link href="/login">Sign in</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">Sign up</Link>
-            </Button>
-            <ThemeToggle />
-          </div>
-
-        </nav>
-      </div>
+      <Header />
       <div className="w-full relative">
-
         <div className="grid grid-cols-1 md:grid-cols-12 pb-6">
-          {/* Left Sidebar */}
           <LeftSidebar />
-
-          {/* Mobile Navigation */}
           <MobileNavigation />
-
           {/* Main Content */}
           <div className="col-span-1 md:col-span-7">
             <div className="w-full flex flex-row bg-background border-b h-14">
@@ -80,8 +54,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-
-          {/* Right Sidebar */}
           <RightContent />
         </div>
       </div>
