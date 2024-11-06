@@ -1,5 +1,5 @@
 import React from 'react'
-import { Bookmark, Copy, Ellipsis, Flag, FlagOffIcon, Globe, GlobeIcon, PlusIcon, ShareIcon } from 'lucide-react'
+import { Bookmark, Copy, Ellipsis, Flag, FlagOffIcon, Globe, GlobeIcon, Heart, PlusIcon, ShareIcon } from 'lucide-react'
 import { MessageSquare } from 'lucide-react'
 import { ThumbsUp } from 'lucide-react'
 import Image from 'next/image'
@@ -16,7 +16,7 @@ import {
 
 const Post = ({ post }: { post: any }) => {
   return (
-    <div key={post} className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
+    <div key={post} className="rounded-lg border bg-card p-4 pb-1 shadow-sm space-y-4">
       <div className="flex flex-row justify-between items-start">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 rounded-full bg-muted">
@@ -49,19 +49,25 @@ const Post = ({ post }: { post: any }) => {
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVEh5yWWzmA0YoMZezhJlPI_LKPKmJB0ge1vI4WHcj5l4HZVxFIHu5nXREu8LfkUGlji0&usqp=CAU" alt="Post Image 3" className="w-full h-auto" />
         <img src="https://media.istockphoto.com/id/521747273/vector/work-for-life.jpg?s=612x612&w=0&k=20&c=bLjt357WizASD-zcNYiaSqI8JeQBCda2ovuOgDmsXi8=" alt="Post Image 4" className="w-full h-auto" />
       </div>
-      <div className="flex justify-between items-center mt-4">
-        <Button variant="ghost" className="text-primary hover:text-primary-foreground">
+      <div className="flex flex-row justify-between items-center mt-4 text-muted-foreground text-xs">
+        <div className='flex flex-row items-center justify-center'>
+          <ThumbsUp className='text-white p-1 bg-blue-800 rounded-full w-5 h-5' fill='white' /> <Heart className='text-white p-1 bg-red-700 rounded-full w-5 h-5 ml-[-5px]' fill='white' />
+          <span className='pl-2'>John k. and 11.6k others liked this</span>
+        </div>
+      </div>
+      <div className="flex justify-around items-center mt-4">
+        <div className="flex flex-1 flex-row items-center justify-center p-3 text-primary hover:bg-muted cursor-pointer">
           <ThumbsUp className="w-5 h-5" />
           <span className="ml-2">Like</span>
-        </Button>
-        <Button variant="ghost" className="text-primary hover:text-primary-foreground">
+        </div>
+        <div className="flex flex-1 flex-row items-center justify-center p-3 text-primary hover:bg-muted cursor-pointer">
           <MessageSquare className="w-5 h-5" />
           <span className="ml-2">Comment</span>
-        </Button>
-        <Button variant="ghost" className="text-primary hover:text-primary-foreground">
+        </div>
+        <div className="flex flex-1 flex-row items-center justify-center p-3 text-primary hover:bg-muted cursor-pointer">
           <ShareIcon className="w-5 h-5" />
           <span className="ml-2">Share</span>
-        </Button>
+        </div>
       </div>
     </div>
   )
