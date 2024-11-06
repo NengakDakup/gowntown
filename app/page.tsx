@@ -2,7 +2,7 @@
 import { useEffect } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
-import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu, MessageSquare, LetterText, Mail, Bell } from "lucide-react"
+import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu, MessageSquare, LetterText, Mail, Bell, Pencil } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -40,12 +40,12 @@ export default function Home() {
 
         </nav>
       </div>
-      <div className="w-full">
+      <div className="w-full relative">
 
         <div className="grid grid-cols-1 md:grid-cols-12 pb-6">
           {/* Left Sidebar */}
-          <div className="hidden md:block md:col-span-2 space-y-4 sticky">
-            <div className="border-r bg-card h-screen">
+          <div className="hidden md:block md:col-span-2 space-y-4">
+            <div className="border-r bg-card h-screen sticky top-0">
               <div className="flex flex-col py-8">
                 <a href="#" className="flex p-4 py-4 items-center space-x-4 text-primary hover:text-primary hover:bg-muted">
                   <HomeIcon className="w-5 h-5" />
@@ -67,6 +67,12 @@ export default function Home() {
                   <Bell className="w-5 h-5" />
                   <span>Notifications</span>
                 </a>
+                <div className="py-4 px-2">
+                  <Button className="rounded-full w-full py-0 gap-x-1">
+                    <Pencil className="w-4 h-4" /> Create Post
+                  </Button>
+
+                </div>
               </div>
             </div>
           </div>
@@ -92,33 +98,44 @@ export default function Home() {
           </div>
 
           {/* Main Content */}
-          <div className="col-span-1 md:col-span-7 space-y-6 p-8 mx-auto max-w-[1400px]">
-            {/* Create Post */}
-            <div className="rounded-lg border bg-card p-4 shadow-sm">
-              <input
-                type="text"
-                placeholder="Start a post..."
-                className="w-full rounded-full border bg-background px-4 py-2"
-              />
+          <div className="col-span-1 md:col-span-7">
+            <div className="w-full flex flex-row bg-background border-b h-14">
+              <div className="w-1/2 flex justify-center bg-muted border-r hover:bg-muted hover:text-primary cursor-pointer">
+                <p className="flex justify-center items-center border-b-4 border-primary text-primary">For You</p>
+              </div>
+              <div className="w-1/2 flex justify-center hover:bg-muted hover:text-primary cursor-pointer">
+                <div className="flex justify-center items-center">Following</div>
+              </div>
             </div>
 
-            {/* Posts */}
-            {[1, 2, 3, 4, 5, 6, 7].map((post) => (
-              <div key={post} className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-full bg-muted" />
-                  <div>
-                    <h3 className="font-semibold">User Name</h3>
-                    <p className="text-sm text-muted-foreground">Posted 2h ago</p>
-                  </div>
-                </div>
-                <p className="text-muted-foreground">This is a sample post content. It could be about anything - work updates, industry news, or professional achievements.</p>
+            <div className="p-3 md:p-8 mx-auto max-w-[1400px] space-y-6">
+              {/* Create Post */}
+              <div className="rounded-lg border bg-card p-4 shadow-sm">
+                <input
+                  type="text"
+                  placeholder="Start a post..."
+                  className="w-full rounded-full border bg-background px-4 py-2"
+                />
               </div>
-            ))}
+
+              {/* Posts */}
+              {[1, 2, 3, 4, 5, 6, 7].map((post) => (
+                <div key={post} className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 rounded-full bg-muted" />
+                    <div>
+                      <h3 className="font-semibold">User Name</h3>
+                      <p className="text-sm text-muted-foreground">Posted 2h ago</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground">This is a sample post content. It could be about anything - work updates, industry news, or professional achievements.</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Right Sidebar */}
-          <div className="hidden md:block md:col-span-3 space-y-6 border-l h-screen p-4 bg-background">
+          <div className="hidden md:block md:col-span-3 space-y-6 border-l h-screen p-4 bg-background sticky top-0">
             {/* Suggested Connections */}
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <h3 className="font-semibold mb-4">People You May Know</h3>

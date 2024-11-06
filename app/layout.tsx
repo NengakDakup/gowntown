@@ -1,10 +1,10 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Lato } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 
 
-const lato = Lato({
+const montserrat = Montserrat({
   weight: ['100', '300', '400', '700', '900'],
   subsets: ['latin'],
   display: 'swap',
@@ -28,7 +28,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={`${lato.className} antialiased`} suppressHydrationWarning>
+      <body className={`${montserrat.className} antialiased`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
