@@ -17,7 +17,7 @@ import {
 const Post = ({ post }: { post: any }) => {
   return (
     <div key={post} className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between items-start">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 rounded-full bg-muted">
             <Image src="/assets/images/user.png" width={48} height={48} alt='user profile image' className='w-12 h-12 rounded-full' />
@@ -30,7 +30,7 @@ const Post = ({ post }: { post: any }) => {
         </div>
 
         <DropdownMenu>
-          <DropdownMenuTrigger><Ellipsis /> </DropdownMenuTrigger>
+          <DropdownMenuTrigger className='hover:bg-muted rounded-full p-1'><Ellipsis /> </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem className='cursor-pointer p-2'><Bookmark className='pr-1' /> Save</DropdownMenuItem>
             <DropdownMenuItem className='cursor-pointer p-2'><Copy className='pr-1' /> Copy Link To Post</DropdownMenuItem>
