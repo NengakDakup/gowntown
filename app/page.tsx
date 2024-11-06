@@ -11,6 +11,7 @@ import MobileNavigation from "@/components/MobileNavigation"
 import RightContent from "@/components/RightContent"
 import Post from "@/components/Post"
 import Header from "@/components/Header"
+import CreatePost from "@/components/CreatePost"
 
 
 export default function Home() {
@@ -40,13 +41,7 @@ export default function Home() {
 
             <div className="p-3 md:p-8 mx-auto max-w-[1400px] space-y-6">
               {/* Create Post */}
-              <div className="rounded-lg border bg-card p-4 shadow-sm">
-                <input
-                  type="text"
-                  placeholder="Start a post..."
-                  className="w-full rounded-full border bg-background px-4 py-2"
-                />
-              </div>
+              <CreatePost />
 
               {/* Posts */}
               {[1, 2, 3, 4, 5, 6, 7].map((post) => (
