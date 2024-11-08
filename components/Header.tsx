@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from './ui/button'
 import { ThemeToggle } from './theme-toggle'
+import { ArrowRight, Lock, LogIn, LogOut, User2Icon, UserPlus2 } from 'lucide-react'
 
 const Header = () => {
   return (
@@ -18,11 +19,11 @@ const Header = () => {
           />
         </Link>
         <div className="flex items-center gap-4">
-          <Button asChild variant="ghost">
-            <Link href="/login">Sign in</Link>
+          <Button asChild variant="outline">
+            <Link href="/login">Sign In <User2Icon className='w-5 h-5 pl-1' /> </Link>
           </Button>
           <Button asChild>
-            <Link href="/signup">Sign up</Link>
+            <Link href="/signup">Sign Up <Lock className='w-5 h-5 pl-1' /> </Link>
           </Button>
           <ThemeToggle />
         </div>
