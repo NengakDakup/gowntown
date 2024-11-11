@@ -14,7 +14,7 @@ export default function ChatWindow({ isOpen, onToggle }: ChatWindowProps) {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {isOpen ? (
-        <div className="bg-background border border-primary rounded-lg shadow-lg w-[380px]">
+        <div className="bg-background border border-primary rounded-lg shadow-lg md:w-[380px] w-[320px]">
           <div className="flex items-center justify-between p-3 border-b">
             <h3 className="font-semibold">Messaging</h3>
             <div className="flex gap-2">
