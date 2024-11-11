@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Home as HomeIcon, Users, Briefcase, BookOpen, Calendar, Menu, MessageSquare, LetterText, Mail, Bell, Pencil, ShareIcon, ThumbsUp, ChevronDown } from "lucide-react"
@@ -12,10 +12,12 @@ import RightContent from "@/components/RightContent"
 import Post from "@/components/Post"
 import Header from "@/components/Header"
 import CreatePost from "@/components/CreatePost"
+import ChatWindow from "@/components/chat/ChatWindow"
 
 
 export default function Home() {
   const router = useRouter()
+  const [isChatOpen, setIsChatOpen] = useState(false)
 
   useEffect(() => {
     // router.push('/login')
@@ -55,6 +57,7 @@ export default function Home() {
           <RightContent />
         </div>
       </div>
+      <ChatWindow isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
     </main>
   )
 }
