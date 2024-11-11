@@ -17,12 +17,12 @@ const UserSuggestions = () => {
             <div className="flex-1">
               <h4 className="text-sm font-medium">Rejoice John</h4>
               <p className="text-xs text-muted-foreground">Graphic Designer @ Kuda</p>
-              <Link href="#" className='text-primary inline-flex items-center hover:underline text-sm'>View Profile <ArrowRightCircle className='w-5 h-5 pl-1' /> </Link>
+              <Link href="#" className='text-primary inline-flex items-center hover:underline text-xs'>View Profile <ArrowRightCircle className='w-5 h-5 pl-1' /> </Link>
             </div>
           </div>
         ))}
       </div>
-      <div className='flex justify-center items-center bg-muted py-3 cursor-pointer mt-2 hover:bg-primary hover:text-white rounded-b-lg'>
+      <div className='flex justify-center items-center bg-muted py-2 text-sm cursor-pointer mt-2 hover:bg-primary hover:text-white rounded-b-lg'>
         View more <ArrowRight className='w-5 h-5 pl-1' />
       </div>
     </div>

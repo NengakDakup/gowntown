@@ -45,7 +45,7 @@ export default function Home() {
 
               {/* Posts */}
               {[1, 2, 3].map((post) => (
-                <Post post={post} />
+                <Post post={post} key={post} />
               ))}
               <div className="w-full text-center pt-6">
                 <span className="text-primary inline-flex text-sm cursor-pointer hover:underline">Show More <ChevronDown className="" /> </span>
