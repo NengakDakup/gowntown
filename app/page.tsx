@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react"
 
 export default function Home() {
   return (
-    <MainLayout>
+    <MainLayout showRightContent={true}>
       <div className="w-full flex flex-row bg-background border-b h-14">
         <div className="w-1/2 flex justify-center bg-muted border-r hover:bg-muted hover:text-primary cursor-pointer">
           <p className="flex justify-center items-center border-b-4 border-primary text-primary">For You</p>

@@ -1,31 +1,39 @@
 'use client'
-import Header from "@/components/Header"
-import LeftSidebar from "@/components/LeftSidebar"
-import MobileNavigation from "@/components/MobileNavigation"
-import RightContent from "@/components/RightContent"
-import ChatWindow from "@/components/chat/ChatWindow"
-import { useState } from "react"
+import MainLayout from "@/components/layouts/MainLayout"
+import { Button } from "@/components/ui/button"
+import { Bookmark, Settings } from "lucide-react"
 
 export default function Jobs() {
-  const [isChatOpen, setIsChatOpen] = useState(false)
-
   return (
-    <main className="min-h-screen bg-muted">
-      <Header />
-      <div className="w-full relative">
-        <div className="grid grid-cols-1 md:grid-cols-12 pb-6">
-          <LeftSidebar />
-          <MobileNavigation />
-          <div className="col-span-1 md:col-span-7">
-            <div className="p-3 md:p-8 mx-auto max-w-[1400px]">
-              <h1 className="text-2xl font-bold mb-6">Jobs</h1>
-              {/* Add jobs content here */}
+    <MainLayout>
+      <div className="bg-background">
+        <div className="flex items-center justify-between p-4 border-b">
+          <h1 className="text-xl font-semibold">Jobs</h1>
+          <Button variant="ghost" size="icon">
+            <Settings className="h-5 w-5" />
+          </Button>
+        </div>
+        <div className="divide-y">
+          {[1, 2, 3, 4].map((job) => (
+            <div
+              key={job}
+              className="p-4 hover:bg-muted cursor-pointer"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-semibold">Software Engineer</h3>
+                  <p className="text-sm text-muted-foreground">Company {job}</p>
+                  <p className="text-sm text-muted-foreground">Lagos, Nigeria</p>
+                  <p className="text-xs text-muted-foreground mt-2">Posted 2d ago • 100 applicants</p>
+                </div>
+                <Button variant="ghost" size="icon">
+                  <Bookmark className="h-5 w-5" />
+                </Button>
+              </div>
             </div>
-          </div>
-          <RightContent />
+          ))}
         </div>
       </div>
-      <ChatWindow isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
-    </main>
+    </MainLayout>
   )
 } 
