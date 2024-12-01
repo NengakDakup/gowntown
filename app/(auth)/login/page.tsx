@@ -18,7 +18,7 @@ import { AuthLayout } from "@/components/auth/auth-layout"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { LogInIcon, Eye, EyeOff, Mail, Lock } from "lucide-react"
+import { LogInIcon, Eye, EyeOff, Mail, Lock, BadgeAlert } from "lucide-react"
 import {
   Form,
   FormControl,
@@ -26,7 +26,13 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Alert,
+  AlertDescription,
+} from "@/components/ui/alert"
 import { SpinningIcon } from "@/components/custom-icons"
+import { useRouter } from "next/navigation"
+import { signIn } from "@/services/auth"
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -38,6 +44,8 @@ type LoginFormValues = z.infer<typeof loginSchema>
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState<string>('');
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -49,9 +57,16 @@ export default function LoginPage() {
 
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true)
-    // Add your login logic here
-    console.log(data)
-    setTimeout(() => setIsLoading(false), 1000)
+    const { email, password } = data
+    try {
+      setError('');
+      await signIn(email, password);
+      router.push('/dashboard');
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -78,9 +93,18 @@ export default function LoginPage() {
             Enter your email and password to sign in to your account
           </CardDescription>
         </CardHeader>
+
         <Form {...form}>
+
           <form onSubmit={form.handleSubmit(onSubmit)}>
+
             <CardContent className="grid gap-4">
+              {error && (
+                <Alert variant="destructive" className="my-4">
+                  <BadgeAlert className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
               <FormField
                 control={form.control}
                 name="email"
