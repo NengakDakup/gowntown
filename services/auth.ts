@@ -6,7 +6,7 @@ import {
   UserCredential,
   updateProfile
 } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from '@/lib/firebase';
 
 export const signUp = async (email: string, password: string, data: any): Promise<UserCredential> => {

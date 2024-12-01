@@ -18,7 +18,7 @@ import { AuthLayout } from "@/components/auth/auth-layout"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Check, Lock, Mail } from "lucide-react"
+import { Check, Lock, Mail, BadgeAlert } from "lucide-react"
 import {
   Form,
   FormControl,
@@ -26,7 +26,12 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Alert,
+  AlertDescription,
+} from "@/components/ui/alert"
 import { SpinningIcon } from "@/components/custom-icons"
+import { resetPassword } from "@/services/auth"
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -37,6 +42,7 @@ type FormValues = z.infer<typeof formSchema>
 export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState<string>('')
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -47,12 +53,16 @@ export default function ForgotPasswordPage() {
 
   async function onSubmit(data: FormValues) {
     setIsLoading(true)
-    // Add your password reset logic here
-    console.log(data)
-    setTimeout(() => {
+    try {
+      setError('');
+      await resetPassword(data.email);
       setIsLoading(false)
       setIsSubmitted(true)
-    }, 1000)
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -86,6 +96,12 @@ export default function ForgotPasswordPage() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <CardContent className="grid gap-4">
+                {error && (
+                  <Alert variant="destructive" className="my-4">
+                    <BadgeAlert className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
                 <FormField
                   control={form.control}
                   name="email"
