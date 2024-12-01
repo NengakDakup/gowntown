@@ -4,11 +4,28 @@ import {
   signOut,
   sendPasswordResetEmail,
   UserCredential,
+  updateProfile
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { auth, db } from '@/lib/firebase';
 
-export const signUp = async (email: string, password: string): Promise<UserCredential> => {
-  return await createUserWithEmailAndPassword(auth, email, password);
+export const signUp = async (email: string, password: string, data: any): Promise<UserCredential> => {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+
+  await updateProfile(user, { displayName: data.name });
+
+  await setDoc(doc(db, "users", user.uid), {
+    name: data.name,
+    email: data.email,
+    matricNumber: data.matricNumber,
+    graduationYear: data.graduationYear,
+    institutionType: data.institutionType,
+    institutionName: data.institutionName,
+  });
+
+  return userCredential;
+
 };
 
 export const signIn = async (email: string, password: string): Promise<UserCredential> => {

@@ -18,7 +18,7 @@ import { AuthLayout } from "@/components/auth/auth-layout"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { UserPlus, Eye, EyeOff, GraduationCap, Calendar, Building2, School, ArrowLeft } from "lucide-react"
+import { UserPlus, Eye, EyeOff, GraduationCap, Calendar, Building2, School, ArrowLeft, BadgeAlert } from "lucide-react"
 import {
   Form,
   FormControl,
@@ -46,9 +46,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+  Alert,
+  AlertDescription,
+} from "@/components/ui/alert"
 import { cn } from "@/lib/utils"
 import { Check } from "lucide-react"
 import { institutions } from "@/data/helper"
+import { useRouter } from "next/navigation"
+import { signUp } from "@/services/auth"
+import { useToast } from "@/hooks/use-toast"
 
 const step1Schema = z.object({
   matricNumber: z.string().min(1, "Matriculation number is required"),
@@ -83,6 +90,10 @@ export default function SignUpPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [step1Data, setStep1Data] = useState<Step1FormValues | null>(null)
   const [institutionSearchOpen, setInstitutionSearchOpen] = useState(false)
+  const [error, setError] = useState<string>('')
+  const router = useRouter()
+  const { toast } = useToast()
+
 
   const step1Form = useForm<Step1FormValues>({
     resolver: zodResolver(step1Schema),
@@ -114,9 +125,19 @@ export default function SignUpPage() {
 
   async function onStep2Submit(data: Step2FormValues) {
     setIsLoading(true)
-    // Add your signup logic here
-    console.log({ ...step1Data, ...data })
-    setTimeout(() => setIsLoading(false), 1000)
+    try {
+      setError('');
+      await signUp(data.email, data.password, {...step1Data, ...data});
+      toast({
+        title: "Success",
+        description: "Account created successfully",
+      })
+      router.push('/');
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -292,6 +313,12 @@ export default function SignUpPage() {
           <Form {...step2Form}>
             <form onSubmit={step2Form.handleSubmit(onStep2Submit)}>
               <CardContent className="grid gap-4">
+                {error && (
+                  <Alert variant="destructive" className="my-4">
+                    <BadgeAlert className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
                 <FormField
                   control={step2Form.control}
                   name="name"

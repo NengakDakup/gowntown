@@ -33,6 +33,7 @@ import {
 import { SpinningIcon } from "@/components/custom-icons"
 import { useRouter } from "next/navigation"
 import { signIn } from "@/services/auth"
+import { useToast } from "@/hooks/use-toast"
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -46,6 +47,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string>('');
   const router = useRouter();
+  const { toast } = useToast()
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -61,7 +63,11 @@ export default function LoginPage() {
     try {
       setError('');
       await signIn(email, password);
-      router.push('/dashboard');
+      toast({
+        title: "Success",
+        description: "Logged in successfully",
+      })
+      router.push('/');
     } catch (error: any) {
       setError(error.message);
     } finally {
