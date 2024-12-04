@@ -1,7 +1,6 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
   sendPasswordResetEmail,
   UserCredential,
   updateProfile
@@ -33,7 +32,11 @@ export const signIn = async (email: string, password: string): Promise<UserCrede
 };
 
 export const logout = async (): Promise<void> => {
-  return await signOut(auth);
+  return await signOut();
+};
+
+export const signOut = async () => {
+  return await auth.signOut();
 };
 
 export const resetPassword = async (email: string): Promise<void> => {
