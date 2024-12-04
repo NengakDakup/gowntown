@@ -130,11 +130,11 @@ export default function SignUpPage() {
       await signUp(data.email, data.password, {...step1Data, ...data});
       toast({
         title: "Success",
-        description: "Account created successfully",
+        description: "Account created successfully. Redirecting...",
       })
       router.push('/');
     } catch (error: any) {
-      setError(error.message);
+      setError(error.message || 'Something went wrong');
     } finally {
       setIsLoading(false);
     }

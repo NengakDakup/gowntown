@@ -65,11 +65,11 @@ export default function LoginPage() {
       await signIn(email, password);
       toast({
         title: "Success",
-        description: "Logged in successfully",
+        description: "Logged in successfully. Redirecting...",
       })
       router.push('/');
     } catch (error: any) {
-      setError(error.message);
+      setError(error.message || 'Something went wrong');
     } finally {
       setIsLoading(false)
     }
