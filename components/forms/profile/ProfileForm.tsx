@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm as useHookForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,21 +23,30 @@ import {
 import { profileFormSchema, type ProfileFormValues } from "./schema";
 import { defaultValues } from "./defaults";
 import { createFormFields } from "./fields";
+import { useForm } from "@/context/ProfileFormContext";
 
 interface ProfileFormProps {
   onNext: () => void;
+  onPrevious?: () => void;
 }
 
-export default function ProfileForm({ onNext }: ProfileFormProps) {
-  const form = useForm<ProfileFormValues>({
+export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
+  const { formData, updateFormData } = useForm();
+  const profileData = formData.profile;
+
+  const form = useHookForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      ...profileData,
+    },
   });
 
   const watchedState = form.watch("stateOfOrigin");
   const formFields = createFormFields(watchedState);
 
   function onSubmit(data: ProfileFormValues) {
+    updateFormData('profile', data);
     console.log(data);
     onNext();
   }
@@ -99,7 +108,12 @@ export default function ProfileForm({ onNext }: ProfileFormProps) {
             );
           })}
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+          {onPrevious && (
+            <Button type="button" variant="outline" onClick={onPrevious}>
+              Previous
+            </Button>
+          )}
           <Button type="submit">Next</Button>
         </div>
       </form>
