@@ -18,12 +18,12 @@ export function Steps({ steps, currentStep }: StepsProps) {
         />
       </div>
       <div className="relative flex justify-between">
-        {steps.map((step) => (
+        {steps.map((step, index) => (
           <div
             key={step.id}
-            className={`flex flex-col items-center ${
+            className={`flex flex-col ${
               step.id <= currentStep ? 'text-primary' : 'text-gray-400'
-            }`}
+            } ${index === 0 ? 'items-start' : index === steps.length - 1 ? 'items-end' : 'items-center'}`}
           >
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${

@@ -1,5 +1,6 @@
 'use client'
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { usePathname } from 'next/navigation'
 import Header from "@/components/Header"
 import LeftSidebar from "@/components/LeftSidebar"
 import MobileNavigation from "@/components/MobileNavigation"
@@ -13,6 +14,12 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children, showRightContent = false }: MainLayoutProps) {
   const [isChatOpen, setIsChatOpen] = useState(false)
+  const [showChat, setShowChat] = useState(true)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    setShowChat(pathname !== '/edit-profile')
+  }, [pathname])
 
   return (
     <main className="min-h-screen bg-muted">
@@ -27,7 +34,7 @@ export default function MainLayout({ children, showRightContent = false }: MainL
           {showRightContent && <RightContent />}
         </div>
       </div>
-      <ChatWindow isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
+      {showChat && <ChatWindow isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />}
     </main>
   )
-} 
+}

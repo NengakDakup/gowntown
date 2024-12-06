@@ -45,7 +45,7 @@ export default function EditProfile() {
 
   return (
     <MainLayout showRightContent={false}>
-    <div className="container mx-auto py-10">
+    <div className="w-full px-5 md:px-10 mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
       <Steps steps={steps} currentStep={currentStep} />
       <Card className="mt-8 p-6">
