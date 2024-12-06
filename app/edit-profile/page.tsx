@@ -5,7 +5,7 @@ import MainLayout from "@/components/layouts/MainLayout"
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ProfileForm from '@/components/forms/profile/ProfileForm';
-import QualificationsForm from '@/components/forms/profile/QualificationsForm';
+import QualificationsForm from '@/components/forms/qualification/QualificationsForm';
 import EmploymentForm from '@/components/forms/profile/EmploymentForm';
 import { Steps } from '@/components/forms/profile/Steps';
 
@@ -16,7 +16,7 @@ const steps = [
 ];
 
 export default function EditProfile() {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
 
   const nextStep = () => {
     if (currentStep < steps.length) {
