@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ProfileForm from '@/components/forms/profile/ProfileForm';
 import QualificationsForm from '@/components/forms/qualification/QualificationsForm';
-import EmploymentForm from '@/components/forms/profile/EmploymentForm';
+import EmploymentForm from '@/components/forms/employment/EmploymentForm';
 import { Steps } from '@/components/forms/profile/Steps';
 
 const steps = [
@@ -16,7 +16,7 @@ const steps = [
 ];
 
 export default function EditProfile() {
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(3);
 
   const nextStep = () => {
     if (currentStep < steps.length) {
@@ -37,7 +37,7 @@ export default function EditProfile() {
       case 2:
         return <QualificationsForm onNext={nextStep} onPrevious={previousStep} />;
       case 3:
-        return <EmploymentForm onPrevious={previousStep} />;
+        return <EmploymentForm onNext={nextStep} onPrevious={previousStep} />;
       default:
         return null;
     }
