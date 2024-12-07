@@ -17,7 +17,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { qualificationFormSchema, type QualificationFormValues, type EducationFormValues, type SkillFormValues, InstitutionType } from "./schema";
+import {
+  qualificationFormSchema,
+  type QualificationFormValues,
+  type EducationFormValues,
+  type SkillFormValues,
+  InstitutionType,
+  type QualificationFormPath,
+} from "./schema";
 import { defaultValues } from "./defaults";
 import { createFormFields } from "./fields";
 import { useForm } from "@/context/ProfileFormContext";
@@ -97,14 +104,14 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
               <FormField
                 key={`${index}-${field.name}`}
                 control={form.control}
-                name={`education.${index}.${field.name}` as const}
-                render={({ field: formField }) => (
+                name={`education.${index}.${field.name}` as QualificationFormPath}
+                render={({ field: formField } : { field: any }) => (
                   <FormItem>
                     <FormLabel>{field.title}</FormLabel>
                     <FormControl>
                       {field.type === "select" ? (
                         <Select
-                          value={formField.value || ""}
+                          value={typeof formField.value === 'string' ? formField.value : String(formField.value)}
                           onValueChange={formField.onChange}
                         >
                           <SelectTrigger className="bg-muted">
@@ -180,7 +187,7 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
                 <FormLabel>Skill Level</FormLabel>
                 <FormControl>
                   <Select
-                    value={field.value}
+                    value={typeof field.value === 'string' ? field.value : String(field.value)}
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger className="bg-muted">

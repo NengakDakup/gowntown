@@ -33,3 +33,9 @@ export const qualificationFormSchema = z.object({
 export type EducationFormValues = z.infer<typeof educationSchema>;
 export type SkillFormValues = z.infer<typeof skillSchema>;
 export type QualificationFormValues = z.infer<typeof qualificationFormSchema>;
+
+export type EducationFieldName = keyof EducationFormValues;
+export type EducationPath = "education" | `education.${number}` | `education.${number}.${EducationFieldName}`;
+export type SkillFieldName = keyof SkillFormValues;
+export type SkillPath = "skills" | `skills.${number}` | `skills.${number}.${SkillFieldName}`;
+export type QualificationFormPath = EducationPath | SkillPath;
