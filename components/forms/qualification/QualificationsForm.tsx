@@ -35,11 +35,12 @@ import { Plus, Trash2, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { syncToFirebase } from "@/lib/firebase-utils";
 
-type QualificationsFormProps = {
+interface QualificationsFormProps {
   onNext: () => void;
-  onPrevious?: () => void;
-};
+  onPrevious: () => void;
+}
 
 export default function QualificationsForm({ onNext, onPrevious }: QualificationsFormProps) {
   const { formData, updateFormData } = useForm();
@@ -65,9 +66,9 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
       name: "skills"
     });
 
-  function onSubmit(data: QualificationFormValues) {
+  async function onSubmit(data: QualificationFormValues) {
     updateFormData('qualification', data);
-    console.log(data);
+    await syncToFirebase('qualification', data);
     onNext();
   }
 

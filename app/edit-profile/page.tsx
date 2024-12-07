@@ -1,34 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import MainLayout from "@/components/layouts/MainLayout"
+import MainLayout from '@/components/layouts/MainLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ProfileForm from '@/components/forms/profile/ProfileForm';
 import QualificationsForm from '@/components/forms/qualification/QualificationsForm';
 import EmploymentForm from '@/components/forms/employment/EmploymentForm';
 import { Steps } from '@/components/forms/profile/Steps';
-
-const steps = [
-  { id: 1, name: 'Profile Information' },
-  { id: 2, name: 'Qualifications & Skills' },
-  { id: 3, name: 'Employment History' },
-];
+import { useForm, steps } from '@/context/ProfileFormContext';
 
 export default function EditProfile() {
-  const [currentStep, setCurrentStep] = useState(3);
-
-  const nextStep = () => {
-    if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const previousStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
+  const { currentStep, nextStep, previousStep } = useForm();
 
   const renderForm = () => {
     switch (currentStep) {
@@ -45,13 +27,13 @@ export default function EditProfile() {
 
   return (
     <MainLayout showRightContent={false}>
-    <div className="w-full px-3 md:px-10 mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
-      <Steps steps={steps} currentStep={currentStep} />
-      <Card className="mt-8 p-3">
-        {renderForm()}
-      </Card>
-    </div>
+      <div className="w-full px-3 md:px-10 mx-auto py-10">
+        <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
+        <Steps steps={steps} currentStep={currentStep} />
+        <Card className="mt-8 p-3">
+          {renderForm()}
+        </Card>
+      </div>
     </MainLayout>
   );
 }

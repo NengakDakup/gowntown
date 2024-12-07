@@ -24,6 +24,7 @@ import { profileFormSchema, type ProfileFormValues } from "./schema";
 import { defaultValues } from "./defaults";
 import { createFormFields } from "./fields";
 import { useForm } from "@/context/ProfileFormContext";
+import { syncToFirebase } from "@/lib/firebase-utils";
 
 interface ProfileFormProps {
   onNext: () => void;
@@ -45,9 +46,9 @@ export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
   const watchedState = form.watch("stateOfOrigin");
   const formFields = createFormFields(watchedState);
 
-  function onSubmit(data: ProfileFormValues) {
+  async function onSubmit(data: ProfileFormValues) {
     updateFormData('profile', data);
-    console.log(data);
+    await syncToFirebase('profile', data);
     onNext();
   }
 

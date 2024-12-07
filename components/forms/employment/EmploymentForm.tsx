@@ -28,6 +28,7 @@ import { Plus, Trash2, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { syncToFirebase } from "@/lib/firebase-utils";
 
 type EmploymentFormProps = {
   onNext: () => void;
@@ -69,9 +70,9 @@ export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormPro
     return errors && Object.keys(errors).length > 0;
   };
 
-  function onSubmit(data: EmploymentFormValues) {
+  async function onSubmit(data: EmploymentFormValues) {
     updateFormData('employment', data);
-    console.log(data);
+    await syncToFirebase('employment', data);
     onNext();
   }
 
