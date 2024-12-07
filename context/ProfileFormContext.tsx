@@ -2,13 +2,15 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { ProfileFormValues } from '@/components/forms/profile/schema';
+import { QualificationFormValues } from '@/components/forms/qualification/schema';
 import { defaultValues as profileDefaults } from '@/components/forms/profile/defaults';
+import { defaultValues as qualificationDefaults } from '@/components/forms/qualification/defaults';
 
 export type FormType = 'profile' | 'qualification' | 'employment';
 
 interface FormState {
   profile: Partial<ProfileFormValues>;
-  qualification: any; // Replace with proper type when created
+  qualification: Partial<QualificationFormValues>;
   employment: any; // Replace with proper type when created
 }
 
@@ -21,7 +23,7 @@ interface FormContextType {
 
 const initialState: FormState = {
   profile: profileDefaults,
-  qualification: {},
+  qualification: qualificationDefaults,
   employment: {},
 };
 

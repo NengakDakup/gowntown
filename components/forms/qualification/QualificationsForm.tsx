@@ -1,7 +1,5 @@
 'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm as useHookForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,8 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,19 +16,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { qualificationFormSchema, type QualificationFormValues, type InstitutionType } from "./schema";
+import { Input } from "@/components/ui/input";
+import { qualificationFormSchema, type QualificationFormValues, type EducationFormValues, type SkillFormValues, InstitutionType } from "./schema";
 import { defaultValues } from "./defaults";
 import { createFormFields } from "./fields";
 import { useForm } from "@/context/ProfileFormContext";
+import { useFieldArray, useForm as useHookForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardContent } from "@/components/ui/card";
+import { Plus, Trash2 } from "lucide-react";
 
-interface QualificationsFormProps {
+type QualificationsFormProps = {
   onNext: () => void;
   onPrevious?: () => void;
-}
+};
 
 export default function QualificationsForm({ onNext, onPrevious }: QualificationsFormProps) {
   const { formData, updateFormData } = useForm();
-  const qualificationData = formData.qualification as Partial<QualificationFormValues>;
+  const qualificationData = formData.qualification;
 
   const form = useHookForm<QualificationFormValues>({
     resolver: zodResolver(qualificationFormSchema),
@@ -42,139 +43,225 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
     },
   });
 
-  const watchedState = form.watch("institutionAttended").toLowerCase() as InstitutionType;
-  const formFields = createFormFields(watchedState);
+  const { fields: educationFields, append: appendEducation, remove: removeEducation } = 
+    useFieldArray({
+      control: form.control,
+      name: "education"
+    });
+
+  const { fields: skillFields, append: appendSkill, remove: removeSkill } = 
+    useFieldArray({
+      control: form.control,
+      name: "skills"
+    });
 
   function onSubmit(data: QualificationFormValues) {
-    const institutionType = data.institutionAttended.toLowerCase();
-    if (institutionType !== 'university' && institutionType !== 'polytechnic' && institutionType !== 'college') {
-      console.error('Invalid institution type');
-      return;
-    }
-    const formData = {
-      ...data,
-      institutionAttended: institutionType as InstitutionType
-    };
-    updateFormData('qualification', formData);
-    console.log(formData);
+    updateFormData('qualification', data);
+    console.log(data);
     onNext();
   }
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <h2 className="text-lg font-semibold mb-4">Education History</h2>
+  const mapToInstitutionType = (value: string): InstitutionType | undefined => {
+    switch (value) {
+      case 'university':
+      case 'polytechnic':
+      case 'college':
+        return value;
+      default:
+        return undefined;
+    }
+  };
+
+  const renderEducationForm = (index: number) => {
+    const watchedState = mapToInstitutionType(form.watch(`education.${index}.institutionAttended`)?.toLowerCase());
+    const formFields = createFormFields(watchedState);
+
+    return (
+      <Card key={index} className="mb-4">
+        <CardContent className="pt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Education Record {index + 1}</h3>
+            {index > 0 && (
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => removeEducation(index)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
           </div>
-          {formFields.slice(0, 11).map((field) => {
-            const shouldRender = ('requiredName' in field)
-              ? form.watch(field.requiredName as keyof QualificationFormValues) === field.requiredValue
-              : true;
-
-            if (!shouldRender) return null;
-
-            return (
+          
+          <div className="grid grid-cols-2 gap-4">
+            {formFields.map((field, fieldIndex) => (
               <FormField
-                key={field.title}
+                key={`${index}-${field.name}`}
                 control={form.control}
-                name={field.name as keyof QualificationFormValues}
+                name={`education.${index}.${field.name}` as const}
                 render={({ field: formField }) => (
-                  <FormItem className={field.type === "textarea" ? "col-span-2" : ""}>
+                  <FormItem>
                     <FormLabel>{field.title}</FormLabel>
                     <FormControl>
                       {field.type === "select" ? (
                         <Select
+                          value={formField.value || ""}
                           onValueChange={formField.onChange}
-                          defaultValue={formField.value !== undefined ? String(formField.value) : ""}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="bg-muted">
                             <SelectValue placeholder={`Select ${field.title}`} />
                           </SelectTrigger>
                           <SelectContent>
                             {field.options?.map((option) => (
-                              <SelectItem key={option} value={option}>
+                              <SelectItem key={`${index}-${option}`} value={option}>
                                 {option}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
-                      ) : field.type === "date" ? (
-                        <Input type="date" {...formField} />
                       ) : field.type === "number" ? (
-                        <Input 
-                          type="number" 
-                          {...formField} 
-                          onChange={(e) => formField.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                        <Input
+                          {...formField}
+                          className="bg-muted"
+                          type="number"
+                          step="0.01"
+                          onChange={(e) => formField.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                         />
-                      ) : field.type === "textarea" ? (
-                        <Textarea {...formField} />
                       ) : (
-                        <Input {...formField} />
+                        <Input className="bg-muted" {...formField} />
                       )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            );
-          })}
-
-          <div className="col-span-2">
-            <h2 className="text-lg font-semibold mb-4 mt-6">Skills</h2>
+            ))}
           </div>
-          {formFields.slice(11).map((field) => (
-            <FormField
-              key={field.title}
-              control={form.control}
-              name={field.name as keyof QualificationFormValues}
-              render={({ field: formField }) => (
-                <FormItem className={field.type === "textarea" ? "col-span-2" : ""}>
-                  <FormLabel>{field.title}</FormLabel>
-                  <FormControl>
-                    {field.type === "select" ? (
-                      <Select
-                        onValueChange={formField.onChange}
-                        defaultValue={formField.value !== undefined ? String(formField.value) : ""}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={`Select ${field.title}`} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {field.options?.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    ) : field.type === "date" ? (
-                      <Input type="date" {...formField} />
-                    ) : field.type === "number" ? (
-                      <Input 
-                        type="number" 
-                        {...formField} 
-                        onChange={(e) => formField.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                      />
-                    ) : field.type === "textarea" ? (
-                      <Textarea {...formField} />
-                    ) : (
-                      <Input {...formField} />
-                    )}
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const renderSkillForm = (index: number) => (
+    <Card key={index} className="mb-4">
+      <CardContent className="pt-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">Skill Record {index + 1}</h3>
+          {index > 0 && (
+            <Button
+              variant="destructive"
+              size="icon"
+              onClick={() => removeSkill(index)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
         </div>
-        <div className="flex justify-between">
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name={`skills.${index}.specialSkillAcquired`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Special Skill Acquired</FormLabel>
+                <FormControl>
+                  <Input className="bg-muted" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name={`skills.${index}.skillLevel`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Skill Level</FormLabel>
+                <FormControl>
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="bg-muted">
+                      <SelectValue placeholder="Select Skill Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {["Beginner", "Intermediate", "Advanced", "Expert"].map((level) => (
+                        <SelectItem key={level} value={level}>
+                          {level}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name={`skills.${index}.dateOfSkillAcquired`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date of Skill Acquisition</FormLabel>
+                <FormControl>
+                  <Input className="bg-muted" type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Education History</h2>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => appendEducation({} as any)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Education
+            </Button>
+          </div>
+          {educationFields.map((field, index) => renderEducationForm(index))}
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Skills</h2>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => appendSkill({} as any)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Skill
+            </Button>
+          </div>
+          {skillFields.map((field, index) => renderSkillForm(index))}
+        </div>
+
+        <div className="flex justify-between pt-4">
           {onPrevious && (
             <Button type="button" variant="outline" onClick={onPrevious}>
               Previous
             </Button>
           )}
-          <Button type="submit">Next</Button>
+          <Button type="submit">
+            Next
+          </Button>
         </div>
       </form>
     </Form>

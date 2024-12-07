@@ -76,7 +76,7 @@ export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
                           onValueChange={formField.onChange}
                           defaultValue={formField.value !== undefined ? String(formField.value) : ""}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="bg-muted">
                             <SelectValue placeholder={`Select ${field.title}`} />
                           </SelectTrigger>
                           <SelectContent>
@@ -88,17 +88,18 @@ export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
                           </SelectContent>
                         </Select>
                       ) : field.type === "date" ? (
-                        <Input type="date" {...formField} />
+                        <Input type="date" className="bg-muted" {...formField} />
                       ) : field.type === "number" ? (
                         <Input 
                           type="number" 
-                          {...formField} 
+                          {...formField}
+                          className="bg-muted" 
                           onChange={(e) => formField.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                         />
                       ) : field.type === "textarea" ? (
-                        <Textarea {...formField} />
+                        <Textarea className="bg-muted" {...formField} />
                       ) : (
-                        <Input {...formField} />
+                        <Input className="bg-muted" {...formField} />
                       )}
                     </FormControl>
                     <FormMessage />

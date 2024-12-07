@@ -1,7 +1,8 @@
 import * as z from "zod";
 
-export const qualificationFormSchema = z.object({
-  // Education History
+export type InstitutionType = 'university' | 'polytechnic' | 'college';
+
+const educationSchema = z.object({
   institutionAttended: z.string().min(1, "Please select an institution type"),
   institutionName: z.string().min(1, "Please select an institution name"),
   yearOfEntry: z.string().min(4, "Please enter a valid year"),
@@ -16,11 +17,19 @@ export const qualificationFormSchema = z.object({
     .max(5, "CGPA cannot be greater than 5")
     .optional(),
   awards: z.string().optional(),
+});
 
-  // Skills
+const skillSchema = z.object({
   specialSkillAcquired: z.string().min(1, "Please enter your special skill"),
   skillLevel: z.string().min(1, "Please select a skill level"),
   dateOfSkillAcquired: z.string().min(1, "Please select the date of skill acquisition"),
 });
-export type InstitutionType = 'university' | 'polytechnic' | 'college';
+
+export const qualificationFormSchema = z.object({
+  education: z.array(educationSchema).min(1, "At least one education record is required"),
+  skills: z.array(skillSchema).min(1, "At least one skill record is required"),
+});
+
+export type EducationFormValues = z.infer<typeof educationSchema>;
+export type SkillFormValues = z.infer<typeof skillSchema>;
 export type QualificationFormValues = z.infer<typeof qualificationFormSchema>;
