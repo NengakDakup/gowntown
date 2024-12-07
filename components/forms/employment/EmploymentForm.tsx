@@ -129,9 +129,10 @@ export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormPro
               <div className="grid grid-cols-2 gap-4">
                 {employmentFormFields.map((field) => {
                   // Check if field should be shown based on requirements
-                  const shouldShow = !field.requiredTitle || 
-                    (field.requiredTitle && field.requiredValue && 
-                     form.watch(`employment.${index}.${field.requiredTitle}`) === field.requiredValue);
+                  const watchedValue = form.watch(`employment.${index}.${field.requiredName}` as any);
+                  const shouldShow = !field.requiredName || 
+                    (field.requiredName && field.requiredValue && 
+                     (Array.isArray(watchedValue) ? watchedValue[0] : watchedValue) === field.requiredValue);
 
                   if (!shouldShow) return null;
 
@@ -139,7 +140,7 @@ export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormPro
                     <FormField
                       key={`${index}-${field.name}`}
                       control={form.control}
-                      name={`employment.${index}.${field.name}`}
+                      name={`employment.${index}.${field.name}` as any}
                       render={({ field: formField }) => (
                         <FormItem className={field.type === "text" && field.name === "jobDescription" ? "col-span-2" : undefined}>
                           <FormLabel>{field.title}</FormLabel>

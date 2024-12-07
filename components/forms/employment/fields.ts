@@ -3,7 +3,7 @@ export type FieldConfig = {
   title: string;
   type: "text" | "select" | "date" | "number";
   options?: string[];
-  requiredTitle?: string;
+  requiredName?: string;
   requiredValue?: string;
 };
 
@@ -48,14 +48,14 @@ export const employmentFields: FieldConfig[] = [
     name: "numberOfStaff",
     title: "Number Of Staff",
     type: "number",
-    requiredTitle: "typeOfEmployment",
+    requiredName: "typeOfEmployment",
     requiredValue: "Self Employed",
   },
   {
     name: "stateIndividualStaffRole",
     title: "State Individual Staff Role",
     type: "text",
-    requiredTitle: "typeOfEmployment",
+    requiredName: "typeOfEmployment",
     requiredValue: "Self Employed",
   },
   {
@@ -74,14 +74,14 @@ export const employmentFields: FieldConfig[] = [
     name: "endDate",
     title: "End Date",
     type: "date",
-    requiredTitle: "stillEmployed",
+    requiredName: "stillEmployed",
     requiredValue: "No",
   },
   {
     name: "reasonForLeaving",
     title: "Reason For Leaving",
     type: "text",
-    requiredTitle: "stillEmployed",
+    requiredName: "stillEmployed",
     requiredValue: "No",
   },
 ];
