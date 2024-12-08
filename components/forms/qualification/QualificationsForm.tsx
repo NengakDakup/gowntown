@@ -200,7 +200,6 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
                               {...formField}
                               className="bg-muted"
                               type="number"
-                              step="0.01"
                               onChange={(e) => formField.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                             />
                           ) : (

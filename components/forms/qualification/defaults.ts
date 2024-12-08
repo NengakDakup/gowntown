@@ -11,7 +11,7 @@ export const defaultValues: Partial<QualificationFormValues> = {
     department: "",
     courseOfStudy: "",
     yearOfGraduation: "",
-    cgpa: undefined,
+    cgpa: 0,
     awards: "",
   }],
   skills: [{
