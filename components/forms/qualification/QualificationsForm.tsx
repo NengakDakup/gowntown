@@ -43,7 +43,7 @@ interface QualificationsFormProps {
 }
 
 export default function QualificationsForm({ onNext, onPrevious }: QualificationsFormProps) {
-  const { formData, updateFormData } = useForm();
+  const { formData, updateFormData, isLoading } = useForm();
   const qualificationData = formData.qualification;
 
   const form = useHookForm<QualificationFormValues>({
@@ -333,6 +333,14 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
       </Collapsible>
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>

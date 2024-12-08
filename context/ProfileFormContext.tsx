@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { ProfileFormValues } from '@/components/forms/profile/schema';
 import { QualificationFormValues } from '@/components/forms/qualification/schema';
 import { EmploymentFormValues } from '@/components/forms/employment/schema';
@@ -8,6 +8,10 @@ import { EmploymentFormValues } from '@/components/forms/employment/schema';
 import { defaultValues as profileDefaults } from '@/components/forms/profile/defaults';
 import { defaultValues as qualificationDefaults } from '@/components/forms/qualification/defaults';
 import { defaultValues as employmentDefaults } from '@/components/forms/employment/defaults';
+
+import { fetchUserData } from '@/lib/firebase-utils';
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export type FormType = 'profile' | 'qualification' | 'employment';
 
@@ -30,6 +34,7 @@ interface FormContextType {
   nextStep: () => void;
   previousStep: () => void;
   setStep: (step: number) => void;
+  isLoading: boolean;
 }
 
 const initialState: FormState = {
@@ -42,7 +47,35 @@ const FormContext = createContext<FormContextType | undefined>(undefined);
 
 export function FormProvider({ children }: { children: ReactNode }) {
   const [formData, setFormData] = useState<FormState>(initialState);
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setIsLoading(true);
+        try {
+          const userData = await fetchUserData();
+          if (userData) {
+            setFormData(prev => ({
+              ...prev,
+              profile: userData.profile || profileDefaults,
+              qualification: userData.qualification || qualificationDefaults,
+              employment: userData.employment || employmentDefaults,
+            }));
+          }
+        } catch (error) {
+          console.error('Error loading user data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setIsLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const updateFormData = <T extends FormType>(
     formType: T,
@@ -100,6 +133,7 @@ export function FormProvider({ children }: { children: ReactNode }) {
         nextStep,
         previousStep,
         setStep,
+        isLoading,
       }}
     >
       {children}

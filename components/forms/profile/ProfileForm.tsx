@@ -32,7 +32,7 @@ interface ProfileFormProps {
 }
 
 export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
-  const { formData, updateFormData } = useForm();
+  const { formData, updateFormData, isLoading } = useForm();
   const profileData = formData.profile;
 
   const form = useHookForm<ProfileFormValues>({
@@ -50,6 +50,14 @@ export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
     updateFormData('profile', data);
     await syncToFirebase('profile', data);
     onNext();
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (

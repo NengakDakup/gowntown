@@ -36,7 +36,7 @@ type EmploymentFormProps = {
 };
 
 export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormProps) {
-  const { formData, updateFormData } = useForm();
+  const { formData, updateFormData, isLoading } = useForm();
   const employmentData = formData.employment;
 
   const form = useHookForm<EmploymentFormValues>({
@@ -192,6 +192,14 @@ export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormPro
       </Collapsible>
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
