@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -46,6 +47,12 @@ export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormPro
       ...employmentData,
     },
   });
+
+  useEffect(() => {
+    if (employmentData) {
+      form.reset(employmentData as EmploymentFormValues);
+    }
+  }, [employmentData, form]);
 
   const { fields: employmentFields, append: appendEmployment, remove: removeEmployment } = 
     useFieldArray({

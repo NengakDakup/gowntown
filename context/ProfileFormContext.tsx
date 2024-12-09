@@ -47,7 +47,7 @@ const FormContext = createContext<FormContextType | undefined>(undefined);
 
 export function FormProvider({ children }: { children: ReactNode }) {
   const [formData, setFormData] = useState<FormState>(initialState);
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -66,10 +66,12 @@ export function FormProvider({ children }: { children: ReactNode }) {
           }
         } catch (error) {
           console.error('Error loading user data:', error);
+          setFormData(initialState);
         } finally {
           setIsLoading(false);
         }
       } else {
+        setFormData(initialState);
         setIsLoading(false);
       }
     });

@@ -33,7 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Trash2, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { syncToFirebase } from "@/lib/firebase-utils";
 
@@ -53,6 +53,12 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
       ...qualificationData,
     },
   });
+
+  useEffect(() => {
+    if (qualificationData) {
+      form.reset(qualificationData as QualificationFormValues);
+    }
+  }, [qualificationData, form]);
 
   const { fields: educationFields, append: appendEducation, remove: removeEducation } = 
     useFieldArray({

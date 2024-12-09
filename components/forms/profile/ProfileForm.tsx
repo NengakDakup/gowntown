@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm as useHookForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,12 @@ export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
       ...profileData,
     },
   });
+
+  useEffect(() => {
+    if (profileData) {
+      form.reset(profileData as ProfileFormValues);
+    }
+  }, [profileData, form]);
 
   const watchedState = form.watch("stateOfOrigin");
   const formFields = createFormFields(watchedState);
