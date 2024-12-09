@@ -25,11 +25,14 @@ import { useForm } from "@/context/ProfileFormContext";
 import { useFieldArray, useForm as useHookForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Trash2, ChevronDown } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ArrowLeft, ArrowRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { syncToFirebase } from "@/lib/firebase-utils";
+import { useToast } from "@/hooks/use-toast";
+import { SpinningIcon } from "@/components/custom-icons";
+import { useRouter } from "next/navigation";
 
 type EmploymentFormProps = {
   onNext: () => void;
@@ -38,6 +41,9 @@ type EmploymentFormProps = {
 
 export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormProps) {
   const { formData, updateFormData, isLoading } = useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+  const router = useRouter();
   const employmentData = formData.employment;
 
   const form = useHookForm<EmploymentFormValues>({
@@ -78,9 +84,24 @@ export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormPro
   };
 
   async function onSubmit(data: EmploymentFormValues) {
-    updateFormData('employment', data);
-    await syncToFirebase('employment', data);
-    onNext();
+    try {
+      setIsSubmitting(true);
+      await syncToFirebase('employment', data);
+      updateFormData('employment', data);
+      toast({
+        description: "Data updated successfully",
+        variant: "default",
+      });
+      router.push('/');
+    } catch (error) {
+      console.error(error);
+      toast({
+        description: "Failed to update employment, please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const renderEmploymentForm = (index: number) => {
@@ -227,14 +248,19 @@ export default function EmploymentForm({ onNext, onPrevious }: EmploymentFormPro
           {employmentFields.map((field, index) => renderEmploymentForm(index))}
         </div>
 
-        <div className="flex justify-between pt-4">
+        <div className="flex justify-between">
           {onPrevious && (
             <Button type="button" variant="outline" onClick={onPrevious}>
-              Previous
+              <ArrowLeft className="mr-2 h-4 w-4" /> Previous
             </Button>
           )}
-          <Button type="submit">
-            Next
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <SpinningIcon className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowRight className="mr-2 h-4 w-4" />
+            )}
+            Save
           </Button>
         </div>
       </form>

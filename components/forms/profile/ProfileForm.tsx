@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm as useHookForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,9 @@ import { defaultValues } from "./defaults";
 import { createFormFields } from "./fields";
 import { useForm } from "@/context/ProfileFormContext";
 import { syncToFirebase } from "@/lib/firebase-utils";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { SpinningIcon } from "@/components/custom-icons";
 
 interface ProfileFormProps {
   onNext: () => void;
@@ -34,6 +37,8 @@ interface ProfileFormProps {
 
 export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
   const { formData, updateFormData, isLoading } = useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const profileData = formData.profile;
 
   const form = useHookForm<ProfileFormValues>({
@@ -54,9 +59,20 @@ export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
   const formFields = createFormFields(watchedState);
 
   async function onSubmit(data: ProfileFormValues) {
-    updateFormData('profile', data);
-    await syncToFirebase('profile', data);
-    onNext();
+    try {
+      setIsSubmitting(true);
+      await syncToFirebase('profile', data);
+      updateFormData('profile', data);
+      onNext();
+    } catch (error) {
+      console.error(error);
+      toast({
+        description: "Failed to update profile, please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (isLoading) {
@@ -128,10 +144,17 @@ export default function ProfileForm({ onNext, onPrevious }: ProfileFormProps) {
         <div className="flex justify-between">
           {onPrevious && (
             <Button type="button" variant="outline" onClick={onPrevious}>
-              Previous
+              <ArrowLeft className="mr-2 h-4 w-4" /> Previous
             </Button>
           )}
-          <Button type="submit">Next</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <SpinningIcon className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowRight className="mr-2 h-4 w-4" />
+            )}
+            Next
+          </Button>
         </div>
       </form>
     </Form>

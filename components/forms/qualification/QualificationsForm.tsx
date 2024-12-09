@@ -1,5 +1,6 @@
 'use client';
 
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -31,11 +32,12 @@ import { useForm } from "@/context/ProfileFormContext";
 import { useFieldArray, useForm as useHookForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Trash2, ChevronDown } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ArrowLeft, ArrowRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { syncToFirebase } from "@/lib/firebase-utils";
+import { SpinningIcon } from "@/components/custom-icons";
 
 interface QualificationsFormProps {
   onNext: () => void;
@@ -44,6 +46,8 @@ interface QualificationsFormProps {
 
 export default function QualificationsForm({ onNext, onPrevious }: QualificationsFormProps) {
   const { formData, updateFormData, isLoading } = useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const qualificationData = formData.qualification;
 
   const form = useHookForm<QualificationFormValues>({
@@ -73,9 +77,21 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
     });
 
   async function onSubmit(data: QualificationFormValues) {
-    updateFormData('qualification', data);
-    await syncToFirebase('qualification', data);
-    onNext();
+    try {
+      setIsSubmitting(true);
+      await syncToFirebase('qualification', data);
+      updateFormData('qualification', data);
+      onNext();
+    } catch (error) {
+      console.error(error);
+      toast({
+        description: "Failed to update qualification, please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+    
   }
 
   const mapToInstitutionType = (value: string): InstitutionType | undefined => {
@@ -383,13 +399,18 @@ export default function QualificationsForm({ onNext, onPrevious }: Qualification
           {skillFields.map((field, index) => renderSkillForm(index))}
         </div>
 
-        <div className="flex justify-between pt-4">
+        <div className="flex justify-between">
           {onPrevious && (
             <Button type="button" variant="outline" onClick={onPrevious}>
-              Previous
+              <ArrowLeft className="mr-2 h-4 w-4" /> Previous
             </Button>
           )}
-          <Button type="submit">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <SpinningIcon className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowRight className="mr-2 h-4 w-4" />
+            )}
             Next
           </Button>
         </div>
