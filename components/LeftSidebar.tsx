@@ -1,9 +1,7 @@
 'use client'
 import React from 'react'
-import { Home as HomeIcon, Users, Briefcase, Mail, Bell, Pencil, EllipsisVertical, Flag, Copy, Bookmark, PowerIcon, Settings, User } from "lucide-react"
+import { Home as HomeIcon, Users, Briefcase, Mail, Bell, Pencil } from "lucide-react"
 import { Button } from './ui/button'
-import Image from 'next/image'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from './ui/dropdown-menu'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -54,25 +52,6 @@ const LeftSidebar = () => {
               <Pencil className="w-4 h-4" /> Create Post
             </Button>
           </div>
-        </div>
-        <div className='flex flex-row justify-between items-center mb-24 px-3'>
-          <div className='flex flex-row gap-2'>
-            <div className="w-12 h-12 rounded-full bg-muted">
-              <Image src="/assets/images/user.png" width={48} height={48} alt='user profile image' className='w-12 h-12 rounded-full' />
-            </div>
-            <div>
-              <p>Amedu Faith</p>
-              <p className='text-sm text-primary hover:underline cursor-pointer'>@amedu_faith</p>
-            </div>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger className='hover:bg-muted rounded-full p-1'><EllipsisVertical /> </DropdownMenuTrigger>
-            <DropdownMenuContent className='bg-primary border-primary text-white'>
-              <DropdownMenuItem className='cursor-pointer hover:bg-white hover:text-black p-2'><User className='pr-1' /> View Profile</DropdownMenuItem>
-              <DropdownMenuItem className='cursor-pointer hover:bg-white hover:text-black p-2'><Settings className='pr-1' /> Account Settings</DropdownMenuItem>
-              <DropdownMenuItem className='cursor-pointer hover:bg-white hover:text-black p-2'><PowerIcon className='pr-1' /> Log Out </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     </div>

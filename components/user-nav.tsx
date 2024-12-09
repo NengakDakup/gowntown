@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/context/AuthContext"
 import { signOut } from "@/services/auth"
+import { ArrowRight, PowerIcon, PowerOff } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 export function UserNav() {
@@ -52,19 +54,23 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Edit Profile
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <Link href={`/user/${user?.uid}`}>
+            <DropdownMenuItem>
+              Profile
+              <DropdownMenuShortcut><ArrowRight className='w-5 h-5 pl-1' /></DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </Link>
+          <Link href="/edit-profile">
+            <DropdownMenuItem>
+              Edit Profile
+              <DropdownMenuShortcut><ArrowRight className='w-5 h-5 pl-1' /></DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut}>
+        <DropdownMenuItem className="text-red-500" onClick={handleSignOut}>
           Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          <DropdownMenuShortcut><PowerIcon className='w-5 h-5 pl-1' /></DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
