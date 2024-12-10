@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Briefcase, GraduationCap, MapPin, Mail, Link as LinkIcon, School, Verified } from "lucide-react";
+import { Briefcase, GraduationCap, MapPin, Mail, Link as LinkIcon, School, Verified, Plane, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { getUserData, getUserProfile } from "@/lib/firebase-utils";
@@ -73,7 +73,7 @@ export function UserProfile({ userId }: UserProfileProps) {
   return (
     <div className="">
       {/* Header/Cover Section */}
-      <div className="relative h-48 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg" />
+      <div className="relative h-56 bg-cover bg-center rounded-lg" style={{ backgroundImage: "url('/assets/images/profile-bg.jpeg')" }} />
 
       {/* Profile Info Card */}
       <Card className="relative px-6 py-4 -mt-24">
@@ -92,7 +92,7 @@ export function UserProfile({ userId }: UserProfileProps) {
           <div className="flex-1 mt-2">
             <div className="flex justify-between items-start">
               <div>
-                <h1 className="flex items-center gap-2 text-2xl font-bold">
+                <h1 className="flex items-center gap-2 text-xl md:text-2xl font-bold">
                   {profileData.profile.firstName} {profileData.profile.lastName} <Verified className="w-5 h-5 text-primary" />
                 </h1>
                 <p className="text-muted-foreground">{profileData.profile.headline}</p>
@@ -119,7 +119,7 @@ export function UserProfile({ userId }: UserProfileProps) {
                   )}
                 </div>
               </div>
-              <Button>Connect</Button>
+              <Button size="sm">Message <MessageSquare className="w-5 h-5 pl-1" /> </Button>
             </div>
           </div>
         </div>
