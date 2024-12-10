@@ -20,6 +20,7 @@ interface UserProfileProps {
 
 interface UserProfileData {
   email: string;
+  name: string;
   institutionName: string;
   profile: ProfileFormValues;
   employment: EmploymentFormValues;
@@ -76,10 +77,10 @@ export function UserProfile({ userId }: UserProfileProps) {
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="flex items-center gap-2 text-xl md:text-2xl font-bold">
-                  {profileData.profile.firstName} {profileData.profile.lastName} <Verified className="w-5 h-5 text-primary" />
+                  {profileData.name} <Verified className="w-5 h-5 text-primary" />
                 </h1>
                 <div className="flex flex-col gap-2 mt-2 text-xs text-muted-foreground">
-                  {profileData.profile.physicalAddress && (
+                  {profileData.profile?.physicalAddress && (
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
                       <span>{profileData.profile.physicalAddress}</span>
@@ -114,7 +115,7 @@ export function UserProfile({ userId }: UserProfileProps) {
         </div>
       </Card>
 
-      {profileData.employment && profileData.employment.employment.length > 0 && (
+      {profileData?.employment && profileData?.employment?.employment?.length > 0 && (
         <Card className="p-6 mt-6">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <Briefcase className="w-5 h-5" />
@@ -147,7 +148,7 @@ export function UserProfile({ userId }: UserProfileProps) {
         </Card>
       )}
 
-      {profileData.qualification.education && profileData.qualification.education.length > 0 && (
+      {profileData?.qualification?.education && profileData?.qualification?.education?.length > 0 && (
         <Card className="p-6 mt-6">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <GraduationCap className="w-5 h-5" />
@@ -177,7 +178,7 @@ export function UserProfile({ userId }: UserProfileProps) {
         </Card>
       )}
 
-      {profileData.qualification.skills && (profileData.qualification.skills?.length > 0) && (
+      {profileData?.qualification?.skills && (profileData?.qualification?.skills?.length > 0) && (
         <Card className="p-6 mt-6">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <Briefcase className="w-5 h-5" />

@@ -1,5 +1,5 @@
 import { auth, db } from '@/lib/firebase';
-import { doc, setDoc, getDoc, collection } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 
 export async function syncToFirebase<T extends object>(formType: string, data: T) {
   try {
@@ -67,3 +67,22 @@ export async function getUserData(userId: string) {
     return null;
   }
 };
+
+export async function getAllUsers(limit: number = 10) {
+  try {
+    const usersRef = collection(db, 'users');
+    const snapshot = await getDocs(usersRef);
+    
+    const users = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    // Shuffle array and return limited number of users
+    const shuffled = users.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, limit);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return [];
+  }
+}
