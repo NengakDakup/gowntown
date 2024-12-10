@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Briefcase, GraduationCap, MapPin, Mail, Link as LinkIcon, School, Verified, Plane, MessageSquare, Pencil } from "lucide-react";
+import { Briefcase, GraduationCap, MapPin, Mail, School, Verified, MessageSquare, Pencil } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { getUserData, getUserProfile } from "@/lib/firebase-utils";
+import { getUserData } from "@/lib/firebase-utils";
 import { ProfileFormValues } from "../forms/profile/schema";
 import { EmploymentFormValues } from "../forms/employment/schema";
 import { QualificationFormValues } from "../forms/qualification/schema";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 
 interface UserProfileProps {
   userId: string;
@@ -20,20 +22,21 @@ interface UserProfileData {
   email: string;
   institutionName: string;
   profile: ProfileFormValues;
-  employment: EmploymentFormValues[];
-  qualification: QualificationFormValues[];
+  employment: EmploymentFormValues;
+  qualification: QualificationFormValues;
 }
 
 export function UserProfile({ userId }: UserProfileProps) {
   const [profileData, setProfileData] = useState<UserProfileData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     async function fetchProfile() {
       try {
         const data = await getUserData(userId);
         console.log('Data:', data);
-        
+
         setProfileData(data as UserProfileData);
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -55,10 +58,7 @@ export function UserProfile({ userId }: UserProfileProps) {
 
   return (
     <div className="">
-      {/* Header/Cover Section */}
       <div className="relative h-56 bg-cover bg-center rounded-lg" style={{ backgroundImage: "url('/assets/images/profile-bg.jpeg')" }} />
-
-      {/* Profile Info Card */}
       <Card className="relative px-6 py-4 -mt-24">
         <div className="flex flex-col gap-4">
           <div className="relative -mt-16">
@@ -101,16 +101,19 @@ export function UserProfile({ userId }: UserProfileProps) {
                   )}
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 absolute top-2 right-2">
                 <Button size="sm">Message <MessageSquare className="w-5 h-5 pl-1" /> </Button>
-                <Button variant="secondary" size="sm">Edit Profile <Pencil className="w-5 h-5 pl-1" /> </Button>
+                {user && user.uid === userId && (
+                  <Link href="/edit-profile">
+                    <Button variant="secondary" size="sm">Edit Profile <Pencil className="w-5 h-5 pl-1" /> </Button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
         </div>
       </Card>
 
-      {/* Experience Section */}
       {profileData.employment && profileData.employment.employment.length > 0 && (
         <Card className="p-6 mt-6">
           <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -135,7 +138,7 @@ export function UserProfile({ userId }: UserProfileProps) {
                     )}
                   </div>
                 </div>
-                {index < profileData.employment.length - 1 && (
+                {index < profileData.employment.employment.length - 1 && (
                   <Separator className="my-4" />
                 )}
               </div>
@@ -144,7 +147,6 @@ export function UserProfile({ userId }: UserProfileProps) {
         </Card>
       )}
 
-      {/* Education Section */}
       {profileData.qualification.education && profileData.qualification.education.length > 0 && (
         <Card className="p-6 mt-6">
           <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -166,7 +168,7 @@ export function UserProfile({ userId }: UserProfileProps) {
                     </p>
                   </div>
                 </div>
-                {index < profileData.qualification.length - 1 && (
+                {index < profileData.qualification.education.length - 1 && (
                   <Separator className="my-4" />
                 )}
               </div>
@@ -175,8 +177,7 @@ export function UserProfile({ userId }: UserProfileProps) {
         </Card>
       )}
 
-      {/* Skills Section */}
-      {profileData.qualification.skills && (profileData.qualification.skills?.length > 0 ) && (
+      {profileData.qualification.skills && (profileData.qualification.skills?.length > 0) && (
         <Card className="p-6 mt-6">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <Briefcase className="w-5 h-5" />
