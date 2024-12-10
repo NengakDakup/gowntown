@@ -18,7 +18,8 @@ export default function MainLayout({ children, showRightContent = false }: MainL
   const pathname = usePathname()
 
   useEffect(() => {
-    setShowChat(pathname !== '/edit-profile')
+    
+    setShowChat(pathname !== '/edit-profile' && !pathname.includes('/user/'))
   }, [pathname])
 
   return (
