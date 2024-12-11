@@ -7,9 +7,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { getAllUsers } from '@/lib/firebase-utils'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
-import { Loader2, MapPin, Building2, GraduationCap, Briefcase, ArrowRight } from 'lucide-react'
+import { Loader2, MapPin, ArrowRight, ChevronDown } from 'lucide-react'
 import MainLayout from '@/components/layouts/MainLayout'
-import { Badge } from "@/components/ui/badge"
 
 interface UserData {
   id: string;
@@ -18,9 +17,10 @@ interface UserData {
   photoURL?: string;
   institutionName: string;
   profile: {
-    bio: string;
-    location: string;
-    interests?: string[];
+    aboutYou: string;
+    title: string;
+    physicalAddress: string;
+    officeAddress: string;
   };
   employment: {
     position: string;
@@ -44,7 +44,7 @@ export default function Network() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const fetchedUsers = await getAllUsers();
+        const fetchedUsers = await getAllUsers() as UserData[];
         const filteredUsers = currentUser
           ? fetchedUsers.filter(user => user.id !== currentUser.uid)
           : fetchedUsers;
@@ -101,31 +101,16 @@ export default function Network() {
                 </div>
 
                 {/* Bio Section */}
-                {user.profile?.aboutYou && (
-                  <p className="text-sm line-clamp-2 text-muted-foreground">
-                    {user.profile.aboutYou}
-                  </p>
-                )}
+                <p className="text-sm line-clamp-2 text-muted-foreground">
+                  {user.profile?.aboutYou || 'No bio provided'}
+                </p>
 
                 <div className="space-y-2">
-                  {user.profile?.physicalAddress && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <MapPin className="w-4 h-4 text-muted-foreground" />
-                      <span>{user.profile.physicalAddress}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Skills/Interests Tags */}
-                {user.profile?.interests && (
-                  <div className="flex flex-wrap gap-2">
-                    {user.profile.interests.slice(0, 3).map((interest, index) => (
-                      <Badge key={index} variant="secondary">
-                        {interest}
-                      </Badge>
-                    ))}
+                  <div className="flex items-center gap-2 text-sm">
+                    <MapPin className="w-4 h-4 text-muted-foreground" />
+                    <span>{user.profile?.physicalAddress || 'No address provided'}</span>
                   </div>
-                )}
+                </div>
 
                 {/* View Profile Button */}
                 <div className="pt-2">
@@ -145,9 +130,9 @@ export default function Network() {
             <Button
               onClick={loadMore}
               variant="outline"
-              size="lg"
+              size="sm"
             >
-              View More
+              View More <ChevronDown />
             </Button>
           </div>
         )}
