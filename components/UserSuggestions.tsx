@@ -10,11 +10,14 @@ import { ProfileFormValues } from './forms/profile/schema';
 import { EmploymentFormValues } from './forms/employment/schema';
 import { QualificationFormValues } from './forms/qualification/schema';
 import { useAuth } from '@/context/AuthContext';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface UserData {
   id: string;
   email: string;
+  name: string;
   institutionName: string;
+  photoURL?: string;
   profile: ProfileFormValues;
   employment: EmploymentFormValues;
   qualification: QualificationFormValues;
@@ -29,7 +32,6 @@ const UserSuggestions = () => {
     async function fetchRandomUsers() {
       try {
         const fetchedUsers = await getAllUsers(3);
-        // Filter out the current user from suggestions
         const filteredUsers = currentUser 
           ? fetchedUsers.filter(user => user.id !== currentUser.uid)
           : fetchedUsers;
@@ -58,25 +60,20 @@ const UserSuggestions = () => {
       <div className="space-y-4 px-4">
         {users.map((user) => (
           <div key={user.id} className="flex items-center gap-2 pb-4">
-            <div className="w-12 h-12 rounded-full overflow-hidden">
-              <Image
-                src="/assets/images/user.png"
-                alt={`${user.profile.firstName} ${user.profile.lastName}`}
-                width={48}
-                height={48}
-                className="object-cover"
-              />
-            </div>
+            <Avatar className="w-12 h-12">
+              <AvatarImage src={user.photoURL} alt={user.name} />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
             <div className="flex-1">
-              <Link href={`/user/${user.id}`} className="font-medium hover:underline">
-                {user.profile.firstName} {user.profile.lastName}
+              <Link href={`/user/${user.id}`} className="text-sm font-medium hover:underline">
+                {user.name}
               </Link>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {user.institutionName}
               </p>
             </div>
             <Link href={`/user/${user.id}`}>
-              <Button size="sm" variant="ghost">
+              <Button size="sm" variant="ghost" className='text-xs'>
                 View <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>

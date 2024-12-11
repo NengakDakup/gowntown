@@ -13,6 +13,7 @@ import { EmploymentFormValues } from "../forms/employment/schema";
 import { QualificationFormValues } from "../forms/qualification/schema";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 
 interface UserProfileProps {
   userId: string;
@@ -21,6 +22,7 @@ interface UserProfileProps {
 interface UserProfileData {
   email: string;
   name: string;
+  photoURL: string;
   institutionName: string;
   profile: ProfileFormValues;
   employment: EmploymentFormValues;
@@ -36,7 +38,6 @@ export function UserProfile({ userId }: UserProfileProps) {
     async function fetchProfile() {
       try {
         const data = await getUserData(userId);
-        console.log('Data:', data);
 
         setProfileData(data as UserProfileData);
       } catch (error) {
@@ -63,14 +64,11 @@ export function UserProfile({ userId }: UserProfileProps) {
       <Card className="relative px-6 py-4 -mt-24">
         <div className="flex flex-col gap-4">
           <div className="relative -mt-16">
-            <div className="w-32 h-32 rounded-full border-4 border-white bg-white overflow-hidden">
-              <Image
-                src="/assets/images/user.png"
-                alt="Profile"
-                width={128}
-                height={128}
-                className="object-cover"
-              />
+            <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden">
+              <Avatar className="">
+                <AvatarImage src={profileData?.photoURL || ""} alt={profileData?.name || "User"} />
+                <AvatarFallback>{profileData?.name[0].toUpperCase() || "U"}</AvatarFallback>
+              </Avatar>
             </div>
           </div>
           <div className="flex-1 mt-2">

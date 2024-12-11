@@ -8,6 +8,7 @@ import QualificationsForm from '@/components/forms/qualification/QualificationsF
 import EmploymentForm from '@/components/forms/employment/EmploymentForm';
 import { Steps } from '@/components/forms/profile/Steps';
 import { useForm, steps } from '@/context/ProfileFormContext';
+import ProfilePictureForm from '@/components/forms/ProfilePictureForm';
 
 export default function EditProfile() {
   const { currentStep, nextStep, previousStep } = useForm();
@@ -31,6 +32,7 @@ export default function EditProfile() {
         <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
         <Steps steps={steps} currentStep={currentStep} />
         <Card className="mt-8 p-3">
+          <ProfilePictureForm />
           {renderForm()}
         </Card>
       </div>

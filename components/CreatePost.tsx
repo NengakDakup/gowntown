@@ -1,15 +1,19 @@
-import Image from 'next/image'
 import React from 'react'
 import { Textarea } from './ui/textarea'
 import { Briefcase, Calendar, ImageIcon } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { useAuth } from '@/context/AuthContext'
 
 const CreatePost = () => {
+  const { user } = useAuth()
+
   return (
     <div className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
       <div className="flex flex-row gap-4">
-        <div className="w-12 h-12 rounded-full bg-muted shrink-0">
-          <Image src="/assets/images/user.png" width={48} height={48} alt='user profile image' className='w-12 h-12 rounded-full' />
-        </div>
+        <Avatar className="w-12 h-12">
+          <AvatarImage src={user?.photoURL || ''} alt="User avatar" />
+          <AvatarFallback>{user?.displayName?.charAt(0) || 'U'}</AvatarFallback>
+        </Avatar>
         <Textarea placeholder='Create a new post...' />
       </div>
       <div className="flex flex-row text-sm">
@@ -27,7 +31,6 @@ const CreatePost = () => {
         </div>
       </div>
     </div>
-
   )
 }
 
