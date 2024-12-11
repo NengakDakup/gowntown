@@ -59,6 +59,11 @@ const ProfilePictureForm = () => {
         </Avatar>
         <CldUploadWidget
           uploadPreset="profile_pictures"
+          options={{
+            maxFiles: 1, // Limit to single file
+            maxFileSize: 5_000_000, // 5MB max file size
+            resourceType: 'image', // Ensure only images can be uploaded
+          }}
           onSuccess={handleUploadSuccess}
         >
           {({ open }) => (
