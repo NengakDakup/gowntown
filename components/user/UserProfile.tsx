@@ -64,8 +64,8 @@ export function UserProfile({ userId }: UserProfileProps) {
       <Card className="relative px-6 py-4 -mt-24">
         <div className="flex flex-col gap-4">
           <div className="relative -mt-16">
-            <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden">
-              <Avatar className="">
+            <div className="w-32 h-32 rounded-full border-4 border-white bg-muted overflow-hidden">
+              <Avatar>
                 <AvatarImage src={profileData?.photoURL || ""} alt={profileData?.name || "User"} />
                 <AvatarFallback>{profileData?.name[0].toUpperCase() || "U"}</AvatarFallback>
               </Avatar>

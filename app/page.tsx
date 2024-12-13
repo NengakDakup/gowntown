@@ -2,9 +2,12 @@
 import MainLayout from "@/components/layouts/MainLayout"
 import Post from "@/components/Post"
 import CreatePost from "@/components/CreatePost"
+import { useAuth } from '@/context/AuthContext'
 import { ChevronDown } from "lucide-react"
 
 export default function Home() {
+  const { user } = useAuth()
+
   return (
     <MainLayout showRightContent={true}>
       <div className="w-full flex flex-row bg-background border-b h-14">
@@ -17,7 +20,7 @@ export default function Home() {
       </div>
 
       <div className="p-3 md:p-8 mx-auto max-w-[1400px] space-y-6">
-        <CreatePost />
+        {user && <CreatePost />}
         {[1, 2, 3].map((post) => (
           <Post post={post} key={post} />
         ))}

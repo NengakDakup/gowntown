@@ -1,12 +1,12 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Montserrat } from 'next/font/google'
+import { Montserrat, Poppins } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/AuthContext'
 import { FormProvider } from "@/context/ProfileFormContext"
 
-const montserrat = Montserrat({
+const montserrat = Poppins({
   weight: ['100', '300', '400', '700', '900'],
   subsets: ['latin'],
   display: 'swap',

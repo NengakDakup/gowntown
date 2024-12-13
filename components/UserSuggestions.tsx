@@ -11,6 +11,7 @@ import { EmploymentFormValues } from './forms/employment/schema';
 import { QualificationFormValues } from './forms/qualification/schema';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import UserListSkeletonLoader from './skeletons/UserListSkeletonLoader';
 
 interface UserData {
   id: string;
@@ -47,7 +48,10 @@ const UserSuggestions = () => {
   }, [currentUser]);
 
   if (loading) {
-    return <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">Loading...</div>;
+    return <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
+      <UserListSkeletonLoader />
+      <UserListSkeletonLoader />
+    </div>;
   }
 
   if (users.length === 0) {
