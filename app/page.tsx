@@ -10,14 +10,14 @@ export default function Home() {
 
   return (
     <MainLayout showRightContent={true}>
-      <div className="w-full flex flex-row bg-background border-b h-14">
+      {/* <div className="w-full flex flex-row bg-background border-b h-14">
         <div className="w-1/2 flex justify-center bg-muted border-r hover:bg-muted hover:text-primary cursor-pointer">
           <p className="flex justify-center items-center border-b-4 border-primary text-primary">For You</p>
         </div>
         <div className="w-1/2 flex justify-center hover:bg-muted hover:text-primary cursor-pointer">
           <div className="flex justify-center items-center">Following</div>
         </div>
-      </div>
+      </div> */}
 
       <div className="p-3 md:p-8 mx-auto max-w-[1400px] space-y-6">
         {user && <CreatePost />}
