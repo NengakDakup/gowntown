@@ -20,9 +20,32 @@ interface UserProfileData {
   institutionName: string;
 }
 
+interface ChatData {
+  message: string;
+  timestamp: string;
+  senderId: string;
+}
+
 export default function ChatPage({ params }: ChatPageProps) {
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState<UserProfileData | null>(null);
+  const [messages, setMessages] = useState<ChatData[]>([
+    {
+      message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      timestamp: "2023-08-01T12:34:56",
+      senderId: "CWVST9OK0jPD4Id3fWIRpDPcEMe2",
+    },
+    {
+      message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      timestamp: "2023-08-01T12:34:56",
+      senderId: "CWVST9OK0jPD4Id3fWIRpDPcEMe2",
+    },
+    {
+      message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      timestamp: "2023-08-01T12:34:56",
+      senderId: "vdcUtpVWYASdTaWj69y8xboz0h52",
+    }
+  ]);
   const chatWindowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -46,6 +69,8 @@ export default function ChatPage({ params }: ChatPageProps) {
 
     fetchProfile();
   }, [params.chatId]);
+
+  const isReceived = (id: string) => id === params.chatId;
 
   return (
     <MainLayout>
@@ -73,86 +98,13 @@ export default function ChatPage({ params }: ChatPageProps) {
           </div>
           <div className="border-t-2 overflow-y-scroll h-[450px]" ref={chatWindowRef}>
             <div className="flex flex-col space-y-4 p-4">
-              <div className="flex justify-start">
-                <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">
-                  <p className="text-sm text-primary-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+              {messages.map((message, index) => (
+                <div className={`flex ${isReceived(message.senderId) ? "justify-start" : "justify-end"}`}>
+                  <div className={`${isReceived(message.senderId) ? "bg-primary text-white" : "bg-background border-2 border-primary text-foreground"} p-2 rounded-md w-full max-w-[600px]`}>
+                    <p className="text-sm">{message.message}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex justify-end">
-                <div className="bg-background p-2 rounded-md w-full max-w-[600px] border-2 border-primary">
-                  <p className="text-sm text-accent-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-start">
-                <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">
-                  <p className="text-sm text-primary-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <div className="bg-background p-2 rounded-md w-full max-w-[600px] border-2 border-primary">
-                  <p className="text-sm text-accent-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-start">
-                <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">
-                  <p className="text-sm text-primary-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <div className="bg-background p-2 rounded-md w-full max-w-[600px] border-2 border-primary">
-                  <p className="text-sm text-accent-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-start">
-                <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">
-                  <p className="text-sm text-primary-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <div className="bg-background p-2 rounded-md w-full max-w-[600px] border-2 border-primary">
-                  <p className="text-sm text-accent-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-start">
-                <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">
-                  <p className="text-sm text-primary-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <div className="bg-background p-2 rounded-md w-full max-w-[600px] border-2 border-primary">
-                  <p className="text-sm text-accent-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-start">
-                <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">
-                  <p className="text-sm text-primary-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <div className="bg-background p-2 rounded-md w-full max-w-[600px] border-2 border-primary">
-                  <p className="text-sm text-accent-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-start">
-                <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">
-                  <p className="text-sm text-primary-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <div className="bg-background p-2 rounded-md w-full max-w-[600px] border-2 border-primary">
-                  <p className="text-sm text-accent-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-start">
-                <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">
-                  <p className="text-sm text-primary-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <div className="bg-background p-2 rounded-md w-full max-w-[600px] border-2 border-primary">
-                  <p className="text-sm text-accent-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
           <div className="flex items-center justify-between p-4 border-t-2">
