@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from "react"
 import MainLayout from "@/components/layouts/MainLayout"
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar"
 import { ArrowLeft } from "lucide-react"
@@ -13,6 +14,14 @@ interface ChatPageProps {
 }
 
 export default function ChatPage({ params }: ChatPageProps) {
+  const chatWindowRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight
+    }
+  }, [chatWindowRef])
+
   return (
     <MainLayout>
       <div className="p-3 h-full">
@@ -37,7 +46,7 @@ export default function ChatPage({ params }: ChatPageProps) {
               </Button>
             </Link>
           </div>
-          <div className="border-t-2 overflow-y-scroll h-[450px]">
+          <div className="border-t-2 overflow-y-scroll h-[450px]" ref={chatWindowRef}>
             <div className="flex flex-col space-y-4 p-4">
               <div className="flex justify-start">
                 <div className="bg-primary p-2 rounded-md w-full max-w-[600px]">

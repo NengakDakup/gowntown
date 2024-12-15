@@ -101,7 +101,9 @@ export function UserProfile({ userId }: UserProfileProps) {
                 </div>
               </div>
               <div className="flex flex-col gap-2 absolute top-2 right-2">
-                <Button size="sm">Message <MessageSquare className="w-5 h-5 pl-1" /> </Button>
+                <Link href={`/messages/${userId}`}>
+                  <Button size="sm">Message <MessageSquare className="w-5 h-5 pl-1" /> </Button>
+                </Link>
                 {user && user.uid === userId && (
                   <Link href="/edit-profile">
                     <Button variant="secondary" size="sm">Edit Profile <Pencil className="w-5 h-5 pl-1" /> </Button>
