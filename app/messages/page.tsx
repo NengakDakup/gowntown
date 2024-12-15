@@ -2,8 +2,11 @@
 import MainLayout from "@/components/layouts/MainLayout"
 import { Search, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 export default function Messages() {
+  const router = useRouter();
+
   return (
     <MainLayout>
       <div className="h-full">
@@ -26,6 +29,9 @@ export default function Messages() {
               <div
                 key={message}
                 className="flex items-center gap-4 p-4 hover:bg-muted cursor-pointer"
+                onClick={() => {
+                  router.push(`/messages/${message}`)
+                }}
               >
                 <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                   <span className="text-lg font-semibold">U{message}</span>
