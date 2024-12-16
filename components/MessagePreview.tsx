@@ -19,9 +19,10 @@ interface ProfileData {
 
 interface MessagePreviewProps {
   message: Message;
+  charactersLimit: number;
 }
 
-const MessagePreview = ({ message }: MessagePreviewProps) => {
+const MessagePreview = ({ message, charactersLimit }: MessagePreviewProps) => {
   const router = useRouter()
   const [loading, setLoading] = React.useState(true);
   const [profileData, setProfileData] = React.useState<ProfileData | null>(null);
@@ -59,7 +60,7 @@ const MessagePreview = ({ message }: MessagePreviewProps) => {
       <div className="flex-1">
         <h3 className="font-semibold">{profileData?.name}</h3>
         <p className="text-sm text-muted-foreground">
-          <strong>{message.messages[message.messages.length - 1].senderId === user?.uid ? "You: " : ""}</strong>{message.messages[message.messages.length - 1].message}
+          <strong>{message.messages[message.messages.length - 1].senderId === user?.uid ? "You: " : ""}</strong>{message.messages[message.messages.length - 1].message.slice(0, charactersLimit)}
         </p>
       </div>
       <span className="text-xs text-muted-foreground">{format(message.messages[message.messages.length - 1].timestamp)}</span>

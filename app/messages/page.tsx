@@ -57,7 +57,7 @@ export default function Messages() {
           </div>
           <div className="divide-y">
             {messages.map((message) => (
-              <MessagePreview key={message.id} message={message} />
+              <MessagePreview key={message.id} message={message} charactersLimit={150} />
             ))}
           </div>
         </div>

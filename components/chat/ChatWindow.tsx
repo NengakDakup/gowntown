@@ -1,15 +1,41 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MessageSquare, X, Minimize2, Maximize2, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/context/AuthContext'
+import { db } from '@/lib/firebase'
+import { collection, query, where, getDocs } from 'firebase/firestore'
+import MessagePreview from '../MessagePreview'
 
 interface ChatWindowProps {
   isOpen: boolean
   onToggle: () => void
 }
 
+interface Message {
+  id: string;
+  participants: string[];
+  messages: any[];
+}
+
 export default function ChatWindow({ isOpen, onToggle }: ChatWindowProps) {
   const [isMinimized, setIsMinimized] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return;
+    fetchMessages();
+  }, [user])
+
+  const fetchMessages = async () => {
+    const chatsRef = collection(db, "chats");
+    const q = query(chatsRef, where("participants", "array-contains", user?.uid));
+
+    const querySnapshot = await getDocs(q);
+    const messages = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setMessages(messages as Message[]);
+  }
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -39,22 +65,13 @@ export default function ChatWindow({ isOpen, onToggle }: ChatWindowProps) {
 
           {!isMinimized && (
             <>
-              <div className="h-[400px] overflow-y-auto p-4">
-                {/* Chat list */}
-                {[1, 2, 3].map((chat) => (
-                  <div
-                    key={chat}
-                    className="flex items-center gap-3 p-2 hover:bg-muted rounded-lg cursor-pointer"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                      <MessageSquare size={20} />
-                    </div>
-                    <div>
-                      <p className="font-medium">User {chat}</p>
-                      <p className="text-sm text-muted-foreground">Last message...</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="h-[400px] overflow-y-auto py-4">
+                <div className="divide-y">
+                  {messages.map((message) => (
+                    <MessagePreview key={message.id} message={message} charactersLimit={30} />
+                  ))}
+                </div>
+
               </div>
             </>
           )}
