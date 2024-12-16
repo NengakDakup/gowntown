@@ -9,7 +9,7 @@ import Link from "next/link"
 import { getUserData } from "@/lib/firebase-utils"
 import { useAuth } from "@/context/AuthContext"
 import { db } from "@/lib/firebase"
-import { doc, getDoc, setDoc } from "firebase/firestore"
+import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore"
 
 interface ChatPageProps {
   params: {
@@ -42,8 +42,13 @@ export default function ChatPage({ params }: ChatPageProps) {
   }, [chatWindowRef])
 
   useEffect(() => {
-    fetchMessages();
-  }, [params.receiverId])
+    const unsubscribe = fetchMessages();
+  
+    // Cleanup function to unsubscribe when component unmounts
+    return () => {
+      unsubscribe();
+    };
+  }, [user?.uid, params.receiverId]);
 
   const scrollToBottom = () => {
     if (chatWindowRef.current) {
@@ -95,16 +100,25 @@ export default function ChatPage({ params }: ChatPageProps) {
     return user1 < user2 ? `${user1}_${user2}` : `${user2}_${user1}`;
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = () => {
     const chatID = generateChatId(user?.uid as string, params.receiverId);
     const chatRef = doc(db, "chats", chatID);
-    const chatDoc = await getDoc(chatRef);
-    if (chatDoc.exists()) {
-      const chatData = chatDoc.data();
-      const messages: ChatData[] = chatData.messages;
-      setMessages(messages);
-    }
-  }
+  
+    // Use onSnapshot to listen to real-time updates
+    const unsubscribe = onSnapshot(chatRef, (chatDoc) => {
+      if (chatDoc.exists()) {
+        const chatData = chatDoc.data();
+        const messages: ChatData[] = chatData.messages;
+        setMessages(messages);
+      }
+    }, (error) => {
+      // Optional error handling
+      console.error("Error fetching messages:", error);
+    });
+  
+    // Return the unsubscribe function to allow cleanup
+    return unsubscribe;
+  };
 
   return (
     <MainLayout>
