@@ -71,7 +71,7 @@ export default function ChatPage({ params }: ChatPageProps) {
 
   const sendMessage = async () => {
     if (!chatInput.trim()) return;
-    if(!user) return;
+    if (!user) return;
     const timestamp = new Date().toISOString();
     const newMessage: ChatData = {
       message: chatInput,
@@ -79,7 +79,7 @@ export default function ChatPage({ params }: ChatPageProps) {
       senderId: user?.uid
     };
     setChatInput("");
-    
+
 
     const chatID = generateChatId(user?.uid as string, params.receiverId);
     const chatRef = doc(db, "chats", chatID);
@@ -93,7 +93,7 @@ export default function ChatPage({ params }: ChatPageProps) {
 
   const generateChatId = (user1: string, user2: string) => {
     return user1 < user2 ? `${user1}_${user2}` : `${user2}_${user1}`;
-};
+  };
 
   const fetchMessages = async () => {
     const chatID = generateChatId(user?.uid as string, params.receiverId);
@@ -112,10 +112,12 @@ export default function ChatPage({ params }: ChatPageProps) {
         <div className="bg-background border-2 rounded-lg mx-auto max-w-[1100px] mt-0 md:mt-4 h-[600px]">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center space-x-4">
-              <Avatar className="w-12 h-12 bg-muted rounded-full flex items-center justify-center font-semibold">
-                <AvatarImage className="rounded-full w-12 h-12" src={profileData?.photoURL} alt={"User"} />
-                <AvatarFallback className="text-lg">{profileData?.name?.charAt(0) || "U"}</AvatarFallback>
-              </Avatar>
+              <Link href={`/user/${params.receiverId}`}>
+                <Avatar className="w-12 h-12 bg-muted rounded-full flex items-center justify-center font-semibold">
+                  <AvatarImage className="rounded-full w-12 h-12 object-cover" src={profileData?.photoURL} alt={"User"} />
+                  <AvatarFallback className="text-lg">{profileData?.name?.charAt(0) || "U"}</AvatarFallback>
+                </Avatar>
+              </Link>
               <div className="flex flex-col space-y-1">
                 <span className="font-semibold">{profileData?.name}</span>
                 <span className="text-sm text-muted-foreground">

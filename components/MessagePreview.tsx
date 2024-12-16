@@ -53,7 +53,7 @@ const MessagePreview = ({ message }: MessagePreviewProps) => {
       }}
     >
       <Avatar className="w-12 h-12 bg-muted rounded-full flex items-center justify-center font-semibold">
-        <AvatarImage className="rounded-full w-12 h-12" src={profileData?.photoURL} alt={"User"} />
+        <AvatarImage className="rounded-full w-12 h-12 object-cover" src={profileData?.photoURL} alt={"User"} />
         <AvatarFallback className="text-lg">{profileData?.name?.charAt(0) || "U"}</AvatarFallback>
       </Avatar>
       <div className="flex-1">

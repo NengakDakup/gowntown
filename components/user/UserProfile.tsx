@@ -66,7 +66,7 @@ export function UserProfile({ userId }: UserProfileProps) {
           <div className="relative -mt-16">
             <div className="w-32 h-32 rounded-full border-4 border-white bg-muted overflow-hidden">
               <Avatar>
-                <AvatarImage src={profileData?.photoURL || ""} alt={profileData?.name || "User"} />
+                <AvatarImage className="h-32 w-32 object-cover" src={profileData?.photoURL || ""} alt={profileData?.name || "User"} />
                 <AvatarFallback>{profileData?.name[0].toUpperCase() || "U"}</AvatarFallback>
               </Avatar>
             </div>
