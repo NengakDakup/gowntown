@@ -65,7 +65,7 @@ const UserSuggestions = () => {
         {users.map((user) => (
           <div key={user.id} className="flex items-center gap-2 pb-4">
             <Avatar className="w-12 h-12">
-              <AvatarImage src={user.photoURL} alt={user.name} />
+              <AvatarImage className='w-12 h-12 object-cover' src={user.photoURL} alt={user.name} />
               <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1">

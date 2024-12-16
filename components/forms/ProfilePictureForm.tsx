@@ -54,7 +54,7 @@ const ProfilePictureForm = () => {
     <Card className="p-4 mb-6">
       <div className="flex items-center gap-4">
         <Avatar className="w-24 h-24">
-          <AvatarImage src={user?.photoURL || ""} />
+          <AvatarImage className='w-24 h-24 object-cover' src={user?.photoURL || ""} />
           <AvatarFallback>{user?.displayName?.charAt(0) || "U"}</AvatarFallback>
         </Avatar>
         <CldUploadWidget

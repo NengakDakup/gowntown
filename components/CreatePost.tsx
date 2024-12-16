@@ -11,7 +11,7 @@ const CreatePost = () => {
     <div className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
       <div className="flex flex-row gap-4">
         <Avatar className="w-12 h-12">
-          <AvatarImage src={user?.photoURL || ''} alt="User avatar" />
+          <AvatarImage className='w-12 h-12 object-cover' src={user?.photoURL || ''} alt="User avatar" />
           <AvatarFallback>{user?.displayName?.charAt(0) || 'U'}</AvatarFallback>
         </Avatar>
         <Textarea placeholder='Create a new post...' />

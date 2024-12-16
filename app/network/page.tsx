@@ -89,7 +89,7 @@ export default function Network() {
                 {/* Header with Avatar and Name */}
                 <div className="flex items-start space-x-4">
                   <Avatar className="w-16 h-16">
-                    <AvatarImage src={user.photoURL} />
+                    <AvatarImage className='w-16 h-16 object-cover' src={user.photoURL} />
                     <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
