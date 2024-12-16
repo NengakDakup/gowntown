@@ -1,11 +1,41 @@
 'use client'
 import MainLayout from "@/components/layouts/MainLayout"
-import { Search, Settings } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import MessagePreview from "@/components/MessagePreview";
+import { useAuth } from "@/context/AuthContext";
+import { db } from "@/lib/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { Search } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react";
+
+interface Message {
+  id: string;
+  participants: string[];
+}
 
 export default function Messages() {
   const router = useRouter();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login')
+    }
+  }, [user, router])
+
+  useEffect(() => {
+    fetchMessages();
+  }, [user])
+
+  const fetchMessages = async () => {
+    const chatsRef = collection(db, "chats");
+    const q = query(chatsRef, where("participants", "array-contains", user?.uid));
+
+    const querySnapshot = await getDocs(q);
+    const messages = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));    
+    setMessages(messages as Message[]);
+  }
 
   return (
     <MainLayout>
@@ -25,25 +55,8 @@ export default function Messages() {
             </div>
           </div>
           <div className="divide-y">
-            {[1, 2, 3, 4, 5].map((message) => (
-              <div
-                key={message}
-                className="flex items-center gap-4 p-4 hover:bg-muted cursor-pointer"
-                onClick={() => {
-                  router.push(`/messages/${message}`)
-                }}
-              >
-                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                  <span className="text-lg font-semibold">U{message}</span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold">User {message}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Last message preview...
-                  </p>
-                </div>
-                <span className="text-xs text-muted-foreground">2d ago</span>
-              </div>
+            {messages.map((message) => (
+              <MessagePreview key={message.id} message={message} />
             ))}
           </div>
         </div>
