@@ -3,14 +3,17 @@
 import { useEffect, useRef, useState } from "react"
 import MainLayout from "@/components/layouts/MainLayout"
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, SendHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { getUserData } from "@/lib/firebase-utils"
+import { useAuth } from "@/context/AuthContext"
+import { db } from "@/lib/firebase"
+import { doc, getDoc, setDoc } from "firebase/firestore"
 
 interface ChatPageProps {
   params: {
-    chatId: string
+    receiverId: string
   }
 }
 
@@ -29,35 +32,29 @@ interface ChatData {
 export default function ChatPage({ params }: ChatPageProps) {
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState<UserProfileData | null>(null);
-  const [messages, setMessages] = useState<ChatData[]>([
-    {
-      message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      timestamp: "2023-08-01T12:34:56",
-      senderId: "CWVST9OK0jPD4Id3fWIRpDPcEMe2",
-    },
-    {
-      message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      timestamp: "2023-08-01T12:34:56",
-      senderId: "CWVST9OK0jPD4Id3fWIRpDPcEMe2",
-    },
-    {
-      message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      timestamp: "2023-08-01T12:34:56",
-      senderId: "vdcUtpVWYASdTaWj69y8xboz0h52",
-    }
-  ]);
+  const [chatInput, setChatInput] = useState("");
+  const { user } = useAuth();
+  const [messages, setMessages] = useState<ChatData[]>([]);
   const chatWindowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (chatWindowRef.current) {
-      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight
-    }
+    scrollToBottom();
   }, [chatWindowRef])
+
+  useEffect(() => {
+    fetchMessages();
+  }, [params.receiverId])
+
+  const scrollToBottom = () => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  };
 
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const data = await getUserData(params.chatId);
+        const data = await getUserData(params.receiverId);
 
         setProfileData(data as UserProfileData);
       } catch (error) {
@@ -68,9 +65,46 @@ export default function ChatPage({ params }: ChatPageProps) {
     }
 
     fetchProfile();
-  }, [params.chatId]);
+  }, [params.receiverId]);
 
-  const isReceived = (id: string) => id === params.chatId;
+  const isReceived = (senderId: string) => senderId === params.receiverId;
+
+  const sendMessage = async () => {
+    if (!chatInput.trim()) return;
+    if(!user) return;
+    const timestamp = new Date().toISOString();
+    const newMessage: ChatData = {
+      message: chatInput,
+      timestamp: timestamp,
+      senderId: user?.uid
+    };
+    setChatInput("");
+    
+
+    const chatID = generateChatId(user?.uid as string, params.receiverId);
+    const chatRef = doc(db, "chats", chatID);
+    await setDoc(chatRef, {
+      participants: [user?.uid, params.receiverId],
+      messages: [...messages, newMessage]
+    }, { merge: true });
+    setMessages([...messages, newMessage]);
+    scrollToBottom();
+  }
+
+  const generateChatId = (user1: string, user2: string) => {
+    return user1 < user2 ? `${user1}_${user2}` : `${user2}_${user1}`;
+};
+
+  const fetchMessages = async () => {
+    const chatID = generateChatId(user?.uid as string, params.receiverId);
+    const chatRef = doc(db, "chats", chatID);
+    const chatDoc = await getDoc(chatRef);
+    if (chatDoc.exists()) {
+      const chatData = chatDoc.data();
+      const messages: ChatData[] = chatData.messages;
+      setMessages(messages);
+    }
+  }
 
   return (
     <MainLayout>
@@ -99,7 +133,7 @@ export default function ChatPage({ params }: ChatPageProps) {
           <div className="border-t-2 overflow-y-scroll h-[450px]" ref={chatWindowRef}>
             <div className="flex flex-col space-y-4 p-4">
               {messages.map((message, index) => (
-                <div className={`flex ${isReceived(message.senderId) ? "justify-start" : "justify-end"}`}>
+                <div key={index} className={`flex ${isReceived(message.senderId) ? "justify-start" : "justify-end"}`}>
                   <div className={`${isReceived(message.senderId) ? "bg-primary text-white" : "bg-background border-2 border-primary text-foreground"} p-2 rounded-md w-full max-w-[600px]`}>
                     <p className="text-sm">{message.message}</p>
                   </div>
@@ -112,8 +146,15 @@ export default function ChatPage({ params }: ChatPageProps) {
               type="text"
               placeholder="Type a message"
               className="w-full pl-4 pr-4 py-2 bg-muted rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  sendMessage();
+                }
+              }}
             />
-            <Button className="ml-2">Send</Button>
+            <Button className="ml-2 text-white" onClick={() => sendMessage()}>Send <SendHorizontal className="w-5 h-5 pl-1" /></Button>
 
           </div>
         </div>
