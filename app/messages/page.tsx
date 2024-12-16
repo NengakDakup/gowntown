@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 interface Message {
   id: string;
   participants: string[];
+  messages: any[];
 }
 
 export default function Messages() {

@@ -5,10 +5,26 @@ import { getUserData } from '@/lib/firebase-utils'
 import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar'
 import { format } from 'timeago.js'
 
-const MessagePreview = ({ message }: { message: any }) => {
+interface Message {
+  id: string;
+  participants: string[];
+  messages: any[];
+}
+
+interface ProfileData {
+  name: string;
+  photoURL: string;
+  institutionName: string;
+}
+
+interface MessagePreviewProps {
+  message: Message;
+}
+
+const MessagePreview = ({ message }: MessagePreviewProps) => {
   const router = useRouter()
   const [loading, setLoading] = React.useState(true);
-  const [profileData, setProfileData] = React.useState(null);
+  const [profileData, setProfileData] = React.useState<ProfileData | null>(null);
   const { user } = useAuth()
 
   const receiverId = message.participants[0] === user?.uid ? message.participants[1] : message.participants[0]
@@ -20,8 +36,7 @@ const MessagePreview = ({ message }: { message: any }) => {
   const fetchProfile = async () => {
     try {
       const data = await getUserData(receiverId);
-
-      setProfileData(data);
+      setProfileData(data as ProfileData);
     } catch (error) {
       console.error("Error fetching profile:", error);
     } finally {
