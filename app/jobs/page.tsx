@@ -1,37 +1,57 @@
 'use client'
 import MainLayout from "@/components/layouts/MainLayout"
 import { Button } from "@/components/ui/button"
-import { Bookmark, Settings } from "lucide-react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { getAllJobs } from "@/lib/firebase-utils"
+import { format } from "timeago.js"
 
 export default function Jobs() {
+  const router = useRouter()
+  const jobs = getAllJobs()
+
   return (
     <MainLayout>
-      <div className="bg-background">
-        <div className="flex items-center justify-between p-4 border-b">
-          <h1 className="text-xl font-semibold">Jobs</h1>
-          <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5" />
-          </Button>
-        </div>
-        <div className="divide-y">
-          {[1, 2, 3, 4].map((job) => (
-            <div
-              key={job}
-              className="p-4 hover:bg-muted cursor-pointer"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-semibold">Software Engineer</h3>
-                  <p className="text-sm text-muted-foreground">Company {job}</p>
-                  <p className="text-sm text-muted-foreground">Lagos, Nigeria</p>
-                  <p className="text-xs text-muted-foreground mt-2">Posted 2d ago • 100 applicants</p>
+      <div className="mx-auto max-w-[1100px] py-8 px-2">
+        <div className="bg-background border-2 rounded-lg">
+          <div className="p-4">
+            <h1 className="text-xl font-semibold">More jobs for you</h1>
+            <p>Based on your profile, preferences and activity like applies, searches and saves.</p>
+          </div>
+          <div className="divide-y">
+            {jobs.map((job) => (
+              <div
+                key={job.id}
+                onClick={() => router.push(`/jobs/${job.id}`)}
+                className="p-4 hover:bg-muted cursor-pointer flex items-start"
+              >
+                <div className="w-16 h-16 rounded-full mr-4">
+                  {job.logo ? (
+                    <Image
+                      src={job.logo}
+                      alt="Company logo"
+                      width={64}
+                      height={64}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-primary rounded-full mr-4 flex items-center justify-center text-white font-semibold text-xl">
+                      {job.company.slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
                 </div>
-                <Button variant="ghost" size="icon">
-                  <Bookmark className="h-5 w-5" />
+                <div>
+                  <h3 className="font-semibold text-primary">{job.title}</h3>
+                  <p className="text-sm text-muted-foreground">{job.company}</p>
+                  <p className="text-sm text-muted-foreground">{job.location}</p>
+                  <p className="text-xs text-muted-foreground mt-2">Posted {format(job.date)}</p>
+                </div>
+                <Button size="sm" className="ml-auto">
+                  Apply
                 </Button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </MainLayout>
