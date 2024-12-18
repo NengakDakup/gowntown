@@ -38,7 +38,7 @@ export default function ChatWindow({ isOpen, onToggle }: ChatWindowProps) {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 left-4 z-50">
       {isOpen ? (
         <div className="bg-background border border-primary rounded-lg shadow-lg md:w-[380px] w-[320px]">
           <div className="flex items-center justify-between p-3 border-b">
