@@ -24,53 +24,57 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
   const quillRef = useRef<Quill | null>(null);
 
   useEffect(() => {
-    if (!editorRef.current || quillRef.current) return;
+    if (!editorRef.current) return;
 
-    const toolbarOptions = [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ 'header': 1 }, { 'header': 2 }],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      [{ 'script': 'sub' }, { 'script': 'super' }],
-      [{ 'indent': '-1' }, { 'indent': '+1' }],
-      [{ 'size': ['small', false, 'large', 'huge'] }],
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'font': [] }],
-      [{ 'align': [] }],
-      ['clean']
-    ];
+    if (!quillRef.current) {
+      const toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
+        [{ 'header': 1 }, { 'header': 2 }],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'script': 'sub' }, { 'script': 'super' }],
+        [{ 'indent': '-1' }, { 'indent': '+1' }],
+        [{ 'size': ['small', false, 'large', 'huge'] }],
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+        ['clean']
+      ];
 
-    quillRef.current = new Quill(editorRef.current, {
-      modules: {
-        toolbar: toolbarOptions
-      },
-      theme: 'snow',
-      placeholder,
-      readOnly
-    });
+      quillRef.current = new Quill(editorRef.current, {
+        modules: {
+          toolbar: toolbarOptions
+        },
+        theme: 'snow',
+        placeholder,
+        readOnly
+      });
 
-    // Handle content changes
-    const handleChange = () => {
-      const content = quillRef.current?.root.innerHTML || '';
-      onChange?.(content);
-    };
+      // Set initial content
+      if (value) {
+        quillRef.current.root.innerHTML = value;
+      }
 
-    quillRef.current.on('text-change', handleChange);
+      // Handle content changes
+      quillRef.current.on('text-change', () => {
+        const content = quillRef.current?.root.innerHTML || '';
+        onChange?.(content);
+      });
+    }
 
     return () => {
       if (quillRef.current) {
-        quillRef.current.off('text-change', handleChange);
+        // Clean up event listeners
+        quillRef.current.off('text-change');
       }
     };
-  }, [onChange, placeholder, readOnly]);
+  }, []); // Empty dependency array since we only want to initialize once
 
-  // Update content when value prop changes
+  // Handle value updates from parent
   useEffect(() => {
-    if (quillRef.current && value !== undefined) {
-      if (quillRef.current.root.innerHTML !== value) {
-        quillRef.current.root.innerHTML = value;
-      }
+    if (quillRef.current && value !== undefined && value !== quillRef.current.root.innerHTML) {
+      quillRef.current.root.innerHTML = value;
     }
   }, [value]);
 
