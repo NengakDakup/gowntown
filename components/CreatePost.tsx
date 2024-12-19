@@ -5,11 +5,18 @@ import { useAuth } from '@/context/AuthContext'
 import QuillEditor from './editor/Editor'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from './ui/button'
-import { get } from 'react-hook-form'
+import { SpinningIcon } from './custom-icons'
+import { createPost } from '@/lib/firebase-utils'
+
+interface ImageFile {
+  file: File;
+  preview: string;
+}
 
 const CreatePost = () => {
   const [content, setContent] = useState('')
-  const [images, setImages] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [images, setImages] = useState<ImageFile[]>([])
   const { user } = useAuth()
   const { toast } = useToast()
 
@@ -23,8 +30,12 @@ const CreatePost = () => {
       })
       return
     }
-    const newImages = files.map(file => URL.createObjectURL(file))
-    setImages(prevImages => [...prevImages, ...newImages])
+    const newImages = files.map(file => ({
+      file: file,
+      preview: URL.createObjectURL(file)
+    }));
+
+    setImages(prevImages => [...prevImages, ...newImages]);
   }
 
   const handleRemoveImage = (index: number) => {
@@ -46,7 +57,38 @@ const CreatePost = () => {
     return text.trim().split(/\s+/).filter(word => word.length > 0).length;
   };
 
-  const handleSubmit = () => {
+  const uploadImages = async (images: ImageFile[]) => {
+    try {
+      const uploadPromises = images.map(async (image) => {
+        const formData = new FormData();
+        formData.append('file', image.file);
+        formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Upload failed for ${image.file.name}`);
+        }
+
+        const data = await response.json();
+        return data.url;
+      });
+
+      const results = await Promise.all(uploadPromises);
+      return results;
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
     if (getWordCount() < 20) {
       toast({
         title: 'Post too short',
@@ -54,8 +96,35 @@ const CreatePost = () => {
         variant: 'destructive',
       })
     }
+    setIsLoading(true)
+    var uploadedImages: string[] = []
+    if (images.length > 1) {
+      uploadedImages = await uploadImages(images)
+    }
     const contentHTML = document.querySelector('.ql-editor') as HTMLElement;
-    console.log('Post submitted:', contentHTML.innerHTML, images)
+    const postId = await createPost({
+      userID: user?.uid || '',
+      content: contentHTML.innerHTML,
+      images: uploadedImages,
+    });
+    if (!postId) {
+      setIsLoading(false)
+      toast({
+        title: 'Error',
+        description: 'Something went wrong, please try again',
+        variant: 'destructive',
+      })
+      return
+    }
+    toast({
+      title: 'Post created',
+      description: 'Your post has been created',
+    })
+    contentHTML.innerHTML = '';
+    setContent('')
+    setImages([])
+    setIsLoading(false)
+
   }
 
   return (
@@ -100,7 +169,7 @@ const CreatePost = () => {
       <div className="flex flex-wrap gap-2 items-center justify-center">
         {images.map((image, index) => (
           <div key={index} className="relative">
-            <img src={image} alt={`Preview ${index}`} className="w-24 h-24 object-cover rounded-md" />
+            <img src={image.preview} alt={`Preview ${index}`} className="w-24 h-24 object-cover rounded-md" />
             <button
               onClick={() => handleRemoveImage(index)}
               className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
@@ -112,10 +181,12 @@ const CreatePost = () => {
       </div>
       <Button
         onClick={handleSubmit}
+        disabled={isLoading}
         className="w-full"
         size="sm"
       >
-        Submit Post
+        {isLoading ? <><SpinningIcon /> Submitting...</> : 'Submit Post'}
+
       </Button>
     </div>
   )

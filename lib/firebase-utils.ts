@@ -1,6 +1,6 @@
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { date } from 'zod';
+import { addDoc } from 'firebase/firestore';
 
 export async function syncToFirebase<T extends object>(formType: string, data: T) {
   try {
@@ -10,7 +10,7 @@ export async function syncToFirebase<T extends object>(formType: string, data: T
     const cleanedData = Object.fromEntries(
       Object.entries(data).filter(([_, v]) => v !== undefined)
     );
-    
+
     await setDoc(doc(db, 'users', user.uid), {
       [formType]: cleanedData,
       updatedAt: new Date().toISOString(),
@@ -73,7 +73,7 @@ export async function getAllUsers(limit: number = 10) {
   try {
     const usersRef = collection(db, 'users');
     const snapshot = await getDocs(usersRef);
-    
+
     const users = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -285,4 +285,19 @@ export function getAllJobs() {
 
 export function getJobById(id: number) {
   return jobs.find(job => job.id === id);
+}
+export async function createPost(post: { userID: string, content: string, images: string[] }) {
+  try {
+    const postRef = collection(db, 'posts');
+    const docRef = await addDoc(postRef, {
+      ...post,
+      createdAt: new Date().toISOString(),
+      likes: 0,
+      comments: []
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error("Error creating post:", error);
+    return false;
+  }
 }
