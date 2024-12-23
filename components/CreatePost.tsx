@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react'
 import { Briefcase, Calendar, ImageIcon, X } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
